@@ -76,9 +76,17 @@ def get_commit_log(base):
     return run_git(["log", "--oneline", f"{base}...HEAD"])
 
 
+COMMIT_SEPARATOR = "<<<COMMIT_BOUNDARY>>>"
+
+
 def get_commit_messages(base):
-    """Get full commit messages between base and HEAD."""
-    return run_git(["log", "--format=%B---", f"{base}...HEAD"])
+    """Get full commit messages between base and HEAD.
+
+    Commits are separated by COMMIT_SEPARATOR (a unique marker) so that
+    commit bodies containing '---' (e.g. markdown separators, YAML
+    frontmatter) are parsed correctly.
+    """
+    return run_git(["log", f"--format=%B{COMMIT_SEPARATOR}", f"{base}...HEAD"])
 
 
 def get_commit_count(base):
@@ -162,6 +170,7 @@ def main():
         "commit_count": commit_count,
         "commits": get_commit_log(args.base),
         "commit_messages": get_commit_messages(args.base),
+        "commit_separator": COMMIT_SEPARATOR,
         "diff_stat": get_diff_stat(args.base),
         "changed_files": get_changed_files(args.base),
         "diff": get_diff(args.base),

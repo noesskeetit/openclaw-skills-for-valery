@@ -90,7 +90,11 @@ def run_graphviz(input_path: str, output_path: str, layout: str) -> None:
         )
     except FileNotFoundError:
         print(
-            f"Error: '{layout}' not found. Install Graphviz: apt-get install graphviz",
+            f"Error: '{layout}' not found. Graphviz is not installed or not on PATH.\n"
+            "Install:\n"
+            "  macOS:   brew install graphviz\n"
+            "  Ubuntu:  apt-get install graphviz\n"
+            "  Alpine:  apk add graphviz",
             file=sys.stderr,
         )
         sys.exit(1)

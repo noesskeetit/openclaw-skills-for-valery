@@ -12,7 +12,7 @@ license: MIT
 export TAVILY_API_KEY=tvly-your-key-here
 ```
 
-Get your free key at https://tavily.com (30 seconds, no credit card).
+Get your free key at https://tavily.com (30 seconds, no credit card). Free tier: 1000 requests/month.
 
 ## Usage
 
@@ -20,8 +20,10 @@ Get your free key at https://tavily.com (30 seconds, no credit card).
 python scripts/search.py "your query here"
 python scripts/search.py "Cloud.ru AI" --max-results 10
 python scripts/search.py "kubernetes latest news" --categories news
-python scripts/search.py "machine learning papers" --language en
+python scripts/search.py "long running query" --timeout 30
 ```
+
+Flags: `--max-results N` (default 5), `--categories general|news` (default general), `--timeout SEC` (default 15).
 
 ## Output
 
@@ -41,6 +43,8 @@ python scripts/search.py "machine learning papers" --language en
   }
 ]
 ```
+
+The first item is always the AI-generated summary (`title: "AI Summary"`, empty `url`) when Tavily returns an answer. Remaining items are ranked search results with real URLs. On error the script exits with code 1 and prints `{"error": "..."}` to **stderr**.
 
 ## Categories
 

@@ -8,7 +8,7 @@ import urllib.request
 import urllib.error
 
 
-def search(query, max_results=5, categories="general", language="auto"):
+def search(query, max_results=5, categories="general", timeout=15):
     api_key = os.environ.get("TAVILY_API_KEY", "")
     if not api_key:
         print(json.dumps({"error": "TAVILY_API_KEY not set"}), file=sys.stderr)
@@ -30,7 +30,7 @@ def search(query, max_results=5, categories="general", language="auto"):
         },
     )
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
         print(json.dumps({"error": f"Tavily API error: {e.code} {e.reason}"}), file=sys.stderr)
@@ -68,10 +68,11 @@ def main():
     parser.add_argument("--categories", default="general",
                         choices=["general", "news"],
                         help="Search category (default: general)")
-    parser.add_argument("--language", default="auto", help="Language code (default: auto)")
+    parser.add_argument("--timeout", type=int, default=15,
+                        help="HTTP timeout in seconds (default: 15)")
     args = parser.parse_args()
 
-    results = search(args.query, args.max_results, args.categories, args.language)
+    results = search(args.query, args.max_results, args.categories, args.timeout)
     print(json.dumps(results, ensure_ascii=False, indent=2))
 
 

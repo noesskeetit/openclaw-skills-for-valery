@@ -1,10 +1,17 @@
 ---
 name: document-creator
-description: "Use this skill whenever the user wants to create, read, edit, or manipulate office documents and PDFs. Covers Word documents (.docx), Excel spreadsheets (.xlsx, .xlsm, .csv), PowerPoint presentations (.pptx), and PDF files. Triggers include: any mention of documents, spreadsheets, presentations, slides, decks, reports, memos, letters, or PDFs; requests to produce professional documents with formatting; extracting or reorganizing content; filling PDF forms; merging/splitting PDFs; creating charts or tables in Excel; building slide decks. Do NOT use for Google Docs, Google Sheets, or general coding tasks unrelated to document generation."
+description: "Use this skill when the user wants to create, edit, or manipulate office documents and PDFs — Word (.docx), Excel (.xlsx, .xlsm, .csv), PowerPoint (.pptx), PDF. Triggers: any mention of documents, spreadsheets, presentations, slides, decks, reports, memos, letters, or PDFs; producing professional documents with formatting; extracting or reorganizing content; filling PDF forms; merging/splitting PDFs; creating charts or tables in Excel; building slide decks. Do NOT use for Google Docs/Sheets or general coding tasks unrelated to document generation."
 license: MIT
 ---
 
 # Document Creator
+
+## Requirements
+
+- **System (required):** `python3`, `poppler-utils`
+- **System (optional):** `node` (for `docx`/`pptxgenjs`/`pdf-lib`/`sharp` workflows), `pandoc`, `libreoffice` (writer/calc/impress) — needed for `recalc.py`, `soffice.py`, `accept_changes.py` and DOCX→other-format conversion
+- **Python:** see `requirements.txt`
+- **npm (optional):** `docx`, `pptxgenjs`, `pdf-lib`, `sharp` — only when using the JS workflows documented below
 
 Skill for creating, editing, and analyzing office documents: DOCX, XLSX, PPTX, and PDF.
 

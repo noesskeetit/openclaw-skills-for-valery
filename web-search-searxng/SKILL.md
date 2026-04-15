@@ -12,24 +12,26 @@ Search the internet via self-hosted SearXNG instance. Aggregates results from Go
 
 ## Prerequisites
 
-SearXNG must be running. Start with docker-compose:
+- Skill will automatically start its SearXNG container via `docker compose up -d` on first invocation (from the skill's own directory).
+- Requires docker daemon access. If docker is unavailable, use the `web-search-tavily` skill instead.
+- Works out of the box — no manual setup required.
 
-```bash
-cd web-search-searxng
-docker compose up -d
-```
-
-Default endpoint: `http://localhost:8080`
+Default endpoint: `http://localhost:8080` (override with `SEARXNG_URL`).
 
 ## Usage
 
 ```bash
-export SEARXNG_URL=http://localhost:8080
-python scripts/search.py "your query here"
-python scripts/search.py "Cloud.ru AI" --max-results 10
-python scripts/search.py "kubernetes news" --categories news
-python scripts/search.py "Python tutorial" --language ru
+python3 scripts/search.py "your query here"
+python3 scripts/search.py "Cloud.ru AI" --max-results 10
+python3 scripts/search.py "kubernetes news" --categories news
+python3 scripts/search.py "Python tutorial" --language ru
 ```
+
+Flags:
+- `--max-results N` — cap result count (default: 5)
+- `--categories {general,news,science,images,videos,it}` — search scope
+- `--language <code>` — e.g. `ru`, `en` (default: `auto`)
+- `--no-auto-start` — don't try to bring up the container; fail fast if service is down
 
 ## Output
 
@@ -60,3 +62,13 @@ python scripts/search.py "Python tutorial" --language ru
 - **Web Search** — "What is X?", "Latest news about Y" → this skill
 - **Web Fetch** — You have a URL, want to read content → WebFetch tool
 - **Web Browser** — Need JS rendering, forms, screenshots → web-browser skill
+
+## Troubleshooting
+
+- **Docker unavailable / no permission:** the script returns a JSON error to stderr and exits non-zero. Start Docker Desktop, grant socket access.
+- **Check status:** `cd` into the skill directory and run `docker compose ps` — a healthy container shows `(healthy)`.
+- **View logs:** `docker compose logs -f searxng` from the skill directory.
+- **Stop the service:** `docker compose down` from the skill directory.
+- **Restart after config change:** `docker compose up -d --force-recreate`.
+- **Resource footprint:** ~200–300 MB RAM idle, capped at 512 MB via `mem_limit`.
+- **Custom endpoint:** set `SEARXNG_URL=http://host:port`; auto-start only kicks in for `localhost`/`127.0.0.1`.

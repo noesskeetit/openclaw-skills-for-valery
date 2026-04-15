@@ -6,10 +6,10 @@ search:
     - json
 
 server:
-  limiter: false
+  limiter: true
   image_proxy: false
   secret_key: "openclaw-secret"
-  port: 8888
+  port: 8080
   bind_address: "0.0.0.0"
   method: "GET"
 

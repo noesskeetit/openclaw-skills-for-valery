@@ -1,3 +1,4 @@
-graphviz==0.20.3
-Pillow==11.0.0
-cairosvg==2.7.1
+# Optional — only required for scripts/render_svg.py (SVG → PNG conversion).
+# generate_graphviz.py and generate_mermaid.py shell out to system binaries
+# (`dot`, `mmdc`) and have no Python dependencies.
+cairosvg>=2.7

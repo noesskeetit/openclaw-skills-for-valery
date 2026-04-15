@@ -6,7 +6,7 @@ echo "Bundling React app to single HTML artifact..."
 # Check if we're in a project directory
 if [ ! -f "package.json" ]; then
   echo "Error: No package.json found. Run this script from your project root."
-  echo "  cd /workspace/my-app && bash /skill/scripts/bundle-artifact.sh"
+  echo "  cd /workspace/my-app && bash scripts/bundle-artifact.sh"
   exit 1
 fi
 

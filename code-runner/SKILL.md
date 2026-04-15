@@ -1,12 +1,18 @@
 ---
 name: code-runner
-description: "Use this skill when you need to execute Python or JavaScript code in a sandboxed environment. Supports data analysis (pandas, numpy, scipy), visualization (matplotlib, seaborn), web prototyping (React, Tailwind), and general scripting. Network access is disabled for security. Output includes stdout, stderr, and any generated files (images, data files)."
+description: "Use this skill when you need to execute Python or JavaScript code. Supports data analysis (pandas, numpy, scipy), visualization (matplotlib, seaborn), web prototyping (React, Tailwind), and general scripting. Output includes stdout, stderr, and any generated files (images, data files). Isolation (network, filesystem) is the responsibility of the runtime environment."
 license: MIT
 ---
 
 # Code Runner
 
-Sandboxed environment for executing Python and JavaScript code with visualization support.
+## Requirements
+
+- **System:** `python3`, `node`
+- **Python:** see `requirements.txt` (pandas, numpy, matplotlib, seaborn, scipy, scikit-learn, sympy, Pillow, openpyxl, beautifulsoup4, Flask)
+- **npm (global, optional):** `typescript`, `react`, `react-dom` — only for React artifact scaffolding
+
+Execute Python and JavaScript code with visualization support. Captures stdout/stderr, tracks newly-created files, and enforces a per-invocation timeout.
 
 ## Available Packages
 
@@ -76,7 +82,7 @@ bash scripts/init-artifact.sh my-app
 Bundle a React project into a single HTML file:
 
 ```bash
-cd /workspace/my-app && bash /skill/scripts/bundle-artifact.sh
+cd /workspace/my-app && bash scripts/bundle-artifact.sh
 ```
 
 ## Output Format
@@ -98,13 +104,18 @@ Fields:
 - `exit_code` -- process exit code (0 = success, -1 = timeout)
 - `new_files` -- list of files created during execution in the workspace
 
-## Sandbox Constraints
+## Execution Environment
 
-- **No network access**: all outbound connections are blocked
-- **File system**: scripts can only read/write within `/workspace`
-- **Timeout**: default 60 seconds, configurable via `--timeout`
-- **Memory**: limited by container resources
-- **No persistent state**: workspace is ephemeral between runs
+This skill executes code in the same process environment as its caller. It does **not** provide isolation by itself: network and filesystem access are whatever the host grants. Isolation (network blocking, filesystem restrictions, memory limits) is the responsibility of the runtime environment (Docker, OpenClaw sandbox, firejail, etc.).
+
+- **Timeout**: default 60 seconds, configurable via `--timeout`. Enforced via `subprocess.run(timeout=...)` — on timeout the child process is killed and `exit_code` is `-1`.
+- **Working directory**: scripts run with `cwd` set to `WORKSPACE` (see Configuration below).
+- **new_files tracking**: the runner diffs the workspace before/after execution and reports newly-created regular files (directories excluded).
+
+## Configuration
+
+- `WORKSPACE` environment variable — path to the working directory used as `cwd` and scanned for new files. Default: `/workspace`.
+- The runners create the workspace directory if it does not already exist (`os.makedirs(..., exist_ok=True)`).
 
 ## Examples
 
@@ -144,5 +155,5 @@ print(data.to_string(index=False))
 bash scripts/init-artifact.sh dashboard
 # Edit src/App.tsx with your component code
 # Then bundle:
-cd /workspace/dashboard && bash /skill/scripts/bundle-artifact.sh
+cd /workspace/dashboard && bash scripts/bundle-artifact.sh
 ```

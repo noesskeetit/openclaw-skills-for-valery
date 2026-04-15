@@ -1,12 +1,30 @@
 ---
 name: web-browser
-description: "Use this skill when you need to interact with web pages that require JavaScript rendering, fill forms, take screenshots, or extract content from single-page applications (SPAs). For simple static pages, use the WebFetch tool instead. This skill provides full browser automation via Playwright."
+description: "Use this skill when you need to interact with web pages that require JavaScript rendering, fill forms, take screenshots, or extract content from single-page applications (SPAs). Provides full browser automation via Playwright + Chromium. For simple static pages, use a plain HTTP fetch instead."
 license: MIT
 ---
 
-# Web Browser Skill
+# Web Browser
+
+## Requirements
+
+- **System:** `python3`, Playwright Chromium (`playwright install chromium`)
+- **Python:** see `requirements.txt`
 
 Full browser automation via Playwright + Chromium. Provides headless browsing capabilities for pages that require JavaScript execution, dynamic content rendering, or interactive automation.
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+playwright install chromium
+# First install: ~525 MB disk, ~1-2 min download
+#   (Chromium ~330 MB + headless_shell ~190 MB)
+```
+
+**Runtime resource notes:**
+- Peak RAM ~400 MB per browser session. On constrained environments (<=2 GB), run only one session at a time.
+- Browsers land in `~/Library/Caches/ms-playwright` (macOS) or `~/.cache/ms-playwright` (Linux) unless `PLAYWRIGHT_BROWSERS_PATH` is set.
 
 ## When to Use Browser vs WebFetch
 
@@ -73,7 +91,9 @@ content = page.inner_text("#main-content")
 
 ### Fill Forms and Click Elements
 
-Interact with page elements:
+For one-off snippets you can use Playwright directly. For multi-step
+interactions, prefer `scripts/interact.py` (see *Form Interaction* below),
+which accepts a JSON step file and returns a structured report.
 
 ```python
 # Fill input fields
@@ -107,7 +127,60 @@ with page.expect_response("**/api/data"):
     page.click("#load-data")
 ```
 
+## Form Interaction
+
+Use `scripts/interact.py` to drive multi-step flows (login, fill, submit,
+screenshot, extract) without writing inline Python. Steps are declared in a
+JSON file; the script returns a JSON report describing each step plus any
+values captured via `output_key`.
+
+**Supported actions**: `goto`, `fill`, `click`, `wait_for`, `screenshot`,
+`extract` (grabs `inner_text`), `evaluate` (runs JS in the page).
+
+**Example `steps.json`**:
+
+```json
+[
+  {"action": "goto", "url": "https://httpbin.org/forms/post"},
+  {"action": "fill", "selector": "input[name=custname]", "value": "Alice"},
+  {"action": "click", "selector": "input[value=large]"},
+  {"action": "extract", "selector": "legend", "output_key": "form_title"},
+  {"action": "screenshot", "path": "after.png"},
+  {"action": "click", "selector": "button"},
+  {"action": "wait_for", "selector": "body", "timeout": 10000}
+]
+```
+
+**Invoke**:
+
+```bash
+python3 scripts/interact.py --steps steps.json
+python3 scripts/interact.py --url https://example.com --steps steps.json --output result.json
+```
+
+**Report shape**:
+
+```json
+{
+  "status": "ok",
+  "failed_at": null,
+  "steps": [{"index": 0, "action": "goto", "status": "ok", "url": "..."}],
+  "outputs": {"form_title": "Pizza Size"}
+}
+```
+
+On failure, `status` becomes `"error"`, `failed_at` points to the failing
+step index, and the matching step record includes `error_type` + `error`.
+The process exits 0 on success, 1 on any step failure.
+
 ## Scripts Reference
+
+| Script | Purpose |
+|---|---|
+| `browse.py` | Navigate to a URL, optionally screenshot, return page metadata as JSON |
+| `screenshot.py` | Capture screenshots (full page / element / custom viewport) |
+| `extract_content.py` | Extract page content as clean Markdown |
+| `interact.py` | Run a JSON-defined sequence of browser interactions |
 
 ### browse.py
 
@@ -149,4 +222,14 @@ python3 scripts/extract_content.py https://example.com
 python3 scripts/extract_content.py https://example.com --selector "article"
 python3 scripts/extract_content.py https://example.com -o content.md
 python3 scripts/extract_content.py https://example.com --wait networkidle --timeout 20000
+```
+
+### interact.py
+
+Execute a JSON-defined sequence of browser interactions (see *Form Interaction* above).
+
+```bash
+python3 scripts/interact.py --steps steps.json
+python3 scripts/interact.py --url https://site.com/login --steps login.json --output report.json
+python3 scripts/interact.py --steps steps.json --viewport-width 1920 --viewport-height 1080
 ```

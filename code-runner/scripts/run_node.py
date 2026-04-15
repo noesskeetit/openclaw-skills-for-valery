@@ -49,7 +49,7 @@ def main():
         stderr = f'Timeout after {args.timeout}s'
 
     after = set(glob.glob(f'{workspace}/**', recursive=True))
-    new_files = sorted(after - before)
+    new_files = sorted(p for p in (after - before) if os.path.isfile(p))
 
     print(json.dumps({
         "stdout": stdout,

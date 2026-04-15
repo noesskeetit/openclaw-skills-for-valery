@@ -110,7 +110,9 @@ def run_mmdc(input_path: str, output_path: str, width: int, theme: str) -> None:
     except FileNotFoundError:
         os.unlink(puppeteer_config)
         print(
-            "Error: 'mmdc' not found. Install mermaid-cli: npm install -g @mermaid-js/mermaid-cli",
+            "Error: 'mmdc' not found. Install mermaid-cli:\n"
+            "  npm install -g @mermaid-js/mermaid-cli\n"
+            "(requires Node.js; first install also downloads ~470 MB Chromium into ~/.cache/puppeteer)",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -118,6 +120,22 @@ def run_mmdc(input_path: str, output_path: str, width: int, theme: str) -> None:
     os.unlink(puppeteer_config)
 
     if result.returncode != 0:
+        stderr_lower = (result.stderr or "").lower()
+        if "chromium" in stderr_lower or "puppeteer" in stderr_lower or "could not find browser" in stderr_lower:
+            print(
+                "Error: Chromium for Mermaid (puppeteer) is not available.\n"
+                "Fix:\n"
+                "  1. Run: npx puppeteer browsers install chrome\n"
+                "  2. Or reinstall mermaid-cli: npm install -g @mermaid-js/mermaid-cli\n"
+                "  3. Check corporate proxy / network if the download was blocked\n"
+                "     (puppeteer downloads ~170 MB from storage.googleapis.com into ~/.cache/puppeteer)",
+                file=sys.stderr,
+            )
+            if result.stderr:
+                print("\n--- mmdc stderr ---", file=sys.stderr)
+                print(result.stderr, file=sys.stderr)
+            sys.exit(result.returncode)
+
         print(f"mmdc failed (exit {result.returncode}):", file=sys.stderr)
         if result.stderr:
             print(result.stderr, file=sys.stderr)

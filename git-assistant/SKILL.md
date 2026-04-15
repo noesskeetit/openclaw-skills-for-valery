@@ -109,7 +109,10 @@ Create a pull request with a generated title and structured body.
 
 ### Steps
 
-1. Check if the current branch tracks a remote and is pushed up to date
+1. Check if the current branch tracks a remote and is pushed up to date.
+   Script `create_pr.py` returns `needs_push: true` in JSON when the branch
+   either has no upstream or is behind the remote. If `true` — run
+   `git push -u origin HEAD` before calling `gh pr create`.
 2. Push to remote with `-u` flag if needed
 3. Analyze **all** commits on the branch (not just the latest) via `git log <base>...HEAD`
 4. Analyze the full diff via `git diff <base>...HEAD`
@@ -151,6 +154,13 @@ python3 scripts/create_pr.py --base develop
 ```
 
 Collects branch info, diff stats, and commit log for the agent to generate the PR content.
+
+The JSON output includes:
+- `needs_push` (bool) — branch has unpushed commits or no upstream; push before creating PR.
+- `commit_messages` (string) — full bodies of all branch commits, separated by the unique
+  marker `<<<COMMIT_BOUNDARY>>>` (also exposed as `commit_separator` in the payload).
+  Split on this marker rather than `---` so markdown separators or YAML frontmatter
+  inside commit bodies don't break parsing.
 
 ## Scripts Reference
 

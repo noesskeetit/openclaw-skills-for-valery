@@ -6,6 +6,11 @@ license: MIT
 
 # Diagram Generator
 
+## Requirements
+
+- **System:** `python3`, `graphviz` (provides `dot`/`neato`/etc.), `node` + `@mermaid-js/mermaid-cli` (provides `mmdc`)
+- **Python (optional):** `cairosvg` — only for `scripts/render_svg.py` (SVG→PNG conversion). The two main scripts (`generate_graphviz.py`, `generate_mermaid.py`) have no pip dependencies.
+
 Generate professional, publication-quality diagrams using **Mermaid** and **Graphviz (DOT)**. Every diagram should look meticulously crafted — clean lines, balanced composition, intentional use of color, and precise spatial relationships. The goal is not merely correct output but work that demonstrates expert-level visual communication.
 
 ## Visual Quality Principles
@@ -16,6 +21,49 @@ Generate professional, publication-quality diagrams using **Mermaid** and **Grap
 - **Typographic restraint**: Labels are concise. Use consistent font sizing. Hierarchy is communicated through weight and position, not font variety.
 - **Visual hierarchy**: The viewer's eye should follow the intended reading order without effort — primary flows are prominent, secondary details recede.
 - **Cohesive composition**: The diagram should feel like a single unified artifact, not a collection of parts.
+
+---
+
+## Installation
+
+### Graphviz (for `generate_graphviz.py`)
+
+System package, no pip needed. Footprint: ~10 MB + deps.
+
+```bash
+# macOS
+brew install graphviz
+
+# Ubuntu / Debian
+apt-get install graphviz
+
+# Alpine
+apk add graphviz
+```
+
+### Mermaid CLI (for `generate_mermaid.py`)
+
+```bash
+npm install -g @mermaid-js/mermaid-cli
+```
+
+**Honest footprint warning:**
+- npm packages: ~330 MB in the global `node_modules`.
+- Chromium cache (downloaded by puppeteer on first install): ~470 MB in `~/.cache/puppeteer/`.
+- First install takes 1-2 minutes (downloads Chromium from `storage.googleapis.com`).
+- If you are behind a corporate proxy and Chromium fails to download, `mmdc` will fail at runtime. Recover with `npx puppeteer browsers install chrome` or check proxy settings. `generate_mermaid.py` detects this failure mode and prints a targeted error message.
+
+**Note on upstream state:** `mermaid-cli` 11.x currently depends on `puppeteer` 23.x, which will become unsupported. An upstream fix is expected in a future `mermaid-cli` release; this skill does not work around it.
+
+### cairosvg (for `render_svg.py` only)
+
+Only install if you plan to use `scripts/render_svg.py` for SVG→PNG conversion:
+
+```bash
+pip install cairosvg
+```
+
+The core generation scripts (`generate_graphviz.py`, `generate_mermaid.py`) do **not** import `cairosvg` — they produce PNG directly via `dot -Tpng` / `mmdc -o out.png`.
 
 ---
 

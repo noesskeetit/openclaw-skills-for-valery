@@ -1,17 +1,49 @@
 ---
 name: document-analyzer
-description: "Use this skill when you need to read, inspect, or extract content from documents — PDF, DOCX, XLSX, PPTX, CSV. Covers content inventory, text extraction, table extraction, page rasterization for visual inspection, embedded image/attachment/form-field extraction, OCR for scanned documents, and choosing the right reading strategy for different document and file types. Do NOT use this skill for document creation, editing, form filling, merging, splitting, watermarking, or encryption."
+description: "Use this skill when you need to read, inspect, extract, or fill content in documents — PDF, DOCX, XLSX, PPTX, CSV. Covers text/table extraction, OCR via tesseract for scanned PDFs, page rasterization, embedded image/attachment extraction, form structure extraction, and PDF form filling (both fillable AcroForm fields and annotation-based filling for scanned/flat forms). Do NOT use for general document creation, editing, merging, splitting, watermarking, or encryption — see document-creator."
 license: MIT
 ---
 
 # Document Analyzer
 
+## Requirements
+
+- **System (required):** `python3`, `poppler-utils`, `tesseract` (+ language packs), `ghostscript`
+- **System (optional):** `pandoc`, `libreoffice`
+- **Python:** see `requirements.txt`
+
 ## Overview
 
-This skill covers reading and analysis of documents across multiple
-formats: PDF, DOCX, XLSX, PPTX, and CSV. It provides strategies for
-text extraction, table extraction, visual inspection, OCR, and
-format-specific best practices.
+This skill covers reading, analysis, and form filling of documents
+across multiple formats: PDF, DOCX, XLSX, PPTX, and CSV. It provides
+strategies for text extraction, table extraction, visual inspection,
+OCR, PDF form filling, and format-specific best practices.
+
+---
+
+## System Prerequisites
+
+**Critical (must have for core functionality):**
+- `python3` — runtime for all helper scripts
+- `poppler-utils` — provides `pdfinfo`, `pdftotext`, `pdftoppm`, `pdfimages`, `pdfdetach`, `pdffonts`
+- `ghostscript` — required by `camelot-py` for table extraction
+
+**For OCR (must have if you need to read scanned PDFs):**
+- `tesseract` (the `tesseract-ocr` binary)
+- Language packs as needed (e.g. `tesseract-lang` meta-package, or specific
+  `tesseract-ocr-rus`, `tesseract-ocr-deu`, etc.). English ships with the
+  base install; any other language requires its pack.
+
+**Optional:**
+- `pandoc` — quick DOCX→markdown/plain conversion (fallback: `python-docx` alone)
+- `libreoffice` — only needed to convert legacy binary formats (`.doc` → `.docx`,
+  `.ppt` → `.pptx`, or `.xls` when `xlrd` is not acceptable)
+
+Install macOS (Homebrew): `brew install poppler ghostscript tesseract tesseract-lang pandoc`
+Install Debian/Ubuntu: `apt install poppler-utils ghostscript tesseract-ocr tesseract-ocr-rus pandoc libreoffice`
+
+Python dependencies are pinned in `requirements.txt` — install with
+`pip install -r requirements.txt`.
 
 ---
 
@@ -19,9 +51,11 @@ format-specific best practices.
 
 1. **Look at the extension.** That is your dispatch key.
 2. **Stat before you read.** Large files need sampling, not slurping.
+   `stat -c` is GNU-only (breaks on macOS/BSD); use a portable Python one-liner:
    ```bash
-   stat -c '%s bytes, %y' document.pdf
+   python3 -c "import os,sys,datetime; st=os.stat(sys.argv[1]); print(f'{st.st_size} bytes, {datetime.datetime.fromtimestamp(st.st_mtime)}')" document.pdf
    file document.pdf
+   # (or simply: ls -lh document.pdf)
    ```
 3. **Read just enough to answer the question.** If the user asked
    "how many rows are in this CSV", don't load the whole thing into
@@ -374,6 +408,148 @@ reader = PdfReader("encrypted.pdf")
 if reader.is_encrypted:
     reader.decrypt("password")
     text = reader.pages[0].extract_text()
+```
+
+---
+
+## PDF Form Filling
+
+This skill fills PDF forms in two modes. Pick the mode based on what
+`check_fillable_fields.py` reports:
+
+- **Fillable (AcroForm) PDF** → use `fill_fillable_fields.py`. Values are
+  written into real form fields, preserving field metadata.
+- **Flat / scanned PDF** (no interactive fields) → use
+  `fill_pdf_form_with_annotations.py`. Values are overlaid as `FreeText`
+  annotations at coordinates you provide.
+
+Before filling a flat PDF, use `check_bounding_boxes.py` to validate your
+coordinates, and `create_validation_image.py` to render a visual proof.
+
+### `fill_fillable_fields.py` — fill AcroForm fields
+
+```bash
+python scripts/fill_fillable_fields.py <input.pdf> <field_values.json> <output.pdf>
+```
+
+`field_values.json` is a **flat list** of objects produced (and annotated
+with values) from `extract_form_field_info.py`. Each item must carry the
+original `field_id` and `page`, plus a `value`:
+
+```json
+[
+  {"field_id": "form1[0].Page1[0].FullName[0]", "page": 1, "value": "Jane Doe"},
+  {"field_id": "form1[0].Page1[0].AgreeCheckbox[0]", "page": 1, "value": "/Yes"}
+]
+```
+
+Checkbox/radio/choice values are validated against the PDF's declared
+options; the script exits non-zero on mismatch.
+
+### `fill_pdf_form_with_annotations.py` — fill flat PDFs via annotations
+
+```bash
+python scripts/fill_pdf_form_with_annotations.py <input.pdf> <fields.json> <output.pdf>
+```
+
+`fields.json` schema (same schema consumed by `check_bounding_boxes.py`
+and `create_validation_image.py`):
+
+```json
+{
+  "pages": [
+    {"page_number": 1, "image_width": 1700, "image_height": 2200}
+  ],
+  "form_fields": [
+    {
+      "description": "Full name field",
+      "page_number": 1,
+      "label_bounding_box": [120, 300, 260, 325],
+      "entry_bounding_box":  [270, 300, 700, 325],
+      "entry_text": {
+        "text": "Jane Doe",
+        "font": "Arial",
+        "font_size": 14,
+        "font_color": "000000"
+      }
+    }
+  ]
+}
+```
+
+Bounding boxes are `[x0, y0, x1, y1]` in **image pixel coordinates** by
+default (origin top-left). If the page entry contains `pdf_width`/`pdf_height`
+keys instead of `image_width`/`image_height`, the boxes are treated as raw
+PDF points and only flipped on the Y axis. Missing `entry_text.text` means
+"leave that field blank".
+
+### `check_bounding_boxes.py` — validate geometry before filling
+
+```bash
+python scripts/check_bounding_boxes.py <fields.json>
+```
+
+Reads the same `fields.json` schema and reports two classes of problems:
+
+1. **Intersections** — any pair of `label_bounding_box` / `entry_bounding_box`
+   rectangles on the same page that overlap (including a field's own label
+   overlapping its own entry). The check stops after ~20 messages.
+2. **Entry too short for font size** — if `entry_bounding_box` height is
+   less than `entry_text.font_size`, the text would overflow. Either grow
+   the box or shrink the font.
+
+Minimal working example that passes the checker:
+
+```json
+{
+  "pages": [{"page_number": 1, "image_width": 1700, "image_height": 2200}],
+  "form_fields": [
+    {
+      "description": "Name",
+      "page_number": 1,
+      "label_bounding_box": [100, 300, 250, 325],
+      "entry_bounding_box": [260, 300, 700, 330],
+      "entry_text": {"text": "Jane Doe", "font_size": 14}
+    }
+  ]
+}
+```
+
+Required keys per field: `description`, `page_number`, `label_bounding_box`,
+`entry_bounding_box`. `entry_text` is optional for the validator but required
+by the filler if you want text drawn.
+
+### `create_validation_image.py` — visual proof of bounding boxes
+
+```bash
+python scripts/create_validation_image.py <page_number> <fields.json> <input_image> <output_image>
+```
+
+Opens a rasterized page image (produced by `convert_pdf_to_images.py` or
+`pdftoppm`), draws every `entry_bounding_box` in red and every
+`label_bounding_box` in blue for fields on that page, and writes the
+annotated image. Read the output image back to confirm visually that your
+coordinates line up with the printed labels/lines before committing to
+`fill_pdf_form_with_annotations.py`.
+
+Typical workflow for a flat PDF:
+
+```bash
+# 1. Check whether interactive fields exist.
+python scripts/check_fillable_fields.py form.pdf
+
+# 2a. If fillable → extract, fill values, run filler:
+python scripts/extract_form_field_info.py form.pdf fields.json
+# ...add "value" to each entry in fields.json...
+python scripts/fill_fillable_fields.py form.pdf fields.json filled.pdf
+
+# 2b. If flat → extract structure, design fields.json, validate, fill:
+python scripts/convert_pdf_to_images.py form.pdf /tmp/pages/
+python scripts/extract_form_structure.py form.pdf structure.json
+# ...author fields.json using coordinates from structure.json...
+python scripts/check_bounding_boxes.py fields.json
+python scripts/create_validation_image.py 1 fields.json /tmp/pages/page_1.png /tmp/validation_1.png
+python scripts/fill_pdf_form_with_annotations.py form.pdf fields.json filled.pdf
 ```
 
 ---
