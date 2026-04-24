@@ -39,8 +39,7 @@ Target audience: **regular end users** (office, content, creative) and **develop
 | [web-artifacts-builder](./web-artifacts-builder) | React + Tailwind + shadcn/ui multi-component artifacts |
 | [diagram-generator](./diagram-generator) | Mermaid + Graphviz → SVG/PNG/PDF |
 | [theme-factory](./theme-factory) | Apply themes (10 presets + custom) to slides/docs/landings |
-| [brand-guidelines](./brand-guidelines) | Apply brand colors/typography to artifacts |
-| [internal-comms](./internal-comms) | Corporate writing (status updates, FAQs, incident reports) |
+| [doc-coauthoring](./doc-coauthoring) | Structured workflow for collaborative docs (proposals, PRDs, RFCs, specs) |
 
 ### Meta
 
@@ -116,7 +115,7 @@ Run heavy skills serially on constrained hardware.
 ## Credits
 
 - Original 8 skills — from the `main` branch of this repo
-- Anthropic skills (`frontend-design`, `webapp-testing`, `skill-creator`, `mcp-builder`, `web-artifacts-builder`, `brand-guidelines`, `internal-comms`, `theme-factory`) — from [anthropics/skills](https://github.com/anthropics/skills) (MIT/Apache license per folder)
+- Anthropic skills (`frontend-design`, `webapp-testing`, `skill-creator`, `mcp-builder`, `web-artifacts-builder`, `theme-factory`, `doc-coauthoring`) — from [anthropics/skills](https://github.com/anthropics/skills) (MIT/Apache license per folder)
 - `find-skills` — discovery helper around [skills.sh](https://skills.sh/) CLI
 
 ## License
