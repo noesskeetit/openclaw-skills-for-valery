@@ -433,10 +433,40 @@ cmd_info() {
 # cmd_watermark - Add text watermark
 # ---------------------------------------------------------------------------
 
+resolve_default_font() {
+  # Pick a platform-appropriate TTF/OTF for ImageMagick -annotate.
+  # Prefer user-supplied --font, then common system fonts.
+  local candidates=()
+  case "$OSTYPE" in
+    darwin*)
+      candidates+=(
+        "/System/Library/Fonts/Helvetica.ttc"
+        "/System/Library/Fonts/SFNS.ttf"
+        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf"
+        "/Library/Fonts/Arial.ttf"
+      )
+      ;;
+    *)
+      candidates+=(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+        "/usr/share/fonts/TTF/DejaVuSans.ttf"
+      )
+      ;;
+  esac
+  for f in "${candidates[@]}"; do
+    [[ -r "$f" ]] && { echo "$f"; return; }
+  done
+  # Linux fontconfig fallback
+  if command -v fc-match >/dev/null 2>&1; then
+    fc-match -f '%{file}' sans-serif 2>/dev/null || true
+  fi
+}
+
 cmd_watermark() {
   check_imagemagick
 
-  local input="" output="" text="" position="southeast" opacity="50" size="24" color="white"
+  local input="" output="" text="" position="southeast" opacity="50" size="24" color="white" font=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -447,6 +477,7 @@ cmd_watermark() {
       --opacity)  shift; opacity="$1" ;;
       --size)     shift; size="$1" ;;
       --color)    shift; color="$1" ;;
+      --font)     shift; font="$1" ;;
       *) die "Unknown option for watermark: $1" ;;
     esac
     shift
@@ -474,10 +505,16 @@ cmd_watermark() {
   # Calculate dissolve value (ImageMagick uses 0-100)
   local dissolve="$opacity"
 
+  # Resolve font — user override first, then platform default, then fall back to IM's built-in
+  [[ -z "$font" ]] && font="$(resolve_default_font)"
+  local font_args=()
+  [[ -n "$font" && -r "$font" ]] && font_args+=(-font "$font")
+
   im_convert "$input" \
     \( -size "$(im_identify -format '%w' "$input")x$(im_identify -format '%h' "$input")" xc:none \
        -gravity "$gravity" \
        -fill "$color" \
+       "${font_args[@]}" \
        -pointsize "$size" \
        -annotate +10+10 "$text" \) \
     -gravity "$gravity" \
