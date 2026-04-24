@@ -1,21 +1,52 @@
-# OpenClaw Skills
+# OpenClaw Skills — Manus Preset
 
-A set of agent-agnostic skills for coding agents (OpenClaw, Claude Code, Cursor, Cline, Aider, etc.). Each skill is a self-contained folder with a `SKILL.md` (YAML frontmatter + instructions) and a `scripts/` directory of executables the agent can call.
+A curated skill pack that turns an OpenClaw (or compatible) agent into a general-purpose assistant covering most common user scenarios out of the box. Based on the original valery skill set + Anthropic's official skills (`anthropics/skills`) + a skill-discovery fallback.
 
-No Docker images, no gateway service, no external runtime — just markdown + scripts. The host environment is responsible for installing dependencies and providing isolation.
+Target audience: **regular end users** (office, content, creative) and **developers** (code, MCPs, debugging). Each skill is a self-contained folder with a `SKILL.md` (YAML frontmatter + instructions); no Docker gateway, no external runtime — just markdown + scripts.
 
 ## Skills
 
-| Skill | Purpose | Heavy deps |
-|---|---|---|
-| [code-runner](./code-runner) | Execute Python or JavaScript with stdout/stderr/file capture | pandas, numpy, matplotlib (~420 MB venv) |
-| [diagram-generator](./diagram-generator) | Mermaid + Graphviz → SVG/PNG/PDF | graphviz binary, mermaid-cli (~470 MB Chromium cache) |
-| [document-analyzer](./document-analyzer) | Read/extract/OCR PDF, DOCX, XLSX, PPTX, CSV; PDF form filling | tesseract, poppler, ghostscript |
-| [document-creator](./document-creator) | Create and validate DOCX, XLSX, PPTX, PDF; OOXML schema validation | python-docx, openpyxl, pptx, reportlab, OOXML XSD schemas (bundled) |
-| [git-assistant](./git-assistant) | Commits, code review, PR descriptions | stdlib only |
-| [web-browser](./web-browser) | Browser automation: navigate, screenshot, fill forms via Playwright | playwright + Chromium (~525 MB) |
-| [web-search-searxng](./web-search-searxng) | Meta-search via self-hosted SearXNG (auto-bootstraps its container) | docker daemon access |
-| [web-search-tavily](./web-search-tavily) | AI-optimized search via Tavily API | stdlib only, requires `TAVILY_API_KEY` |
+### Documents & data
+
+| Skill | Purpose |
+|---|---|
+| [document-analyzer](./document-analyzer) | Read/extract/OCR PDF, DOCX, XLSX, PPTX, CSV; PDF form filling |
+| [document-creator](./document-creator) | Create DOCX, XLSX, PPTX, PDF with OOXML validation |
+
+### Code & development
+
+| Skill | Purpose |
+|---|---|
+| [code-runner](./code-runner) | Execute Python / JavaScript with stdout/stderr/file capture |
+| [git-assistant](./git-assistant) | Commits, code review, PR descriptions |
+| [mcp-builder](./mcp-builder) | Build MCP servers in Python (FastMCP) or TypeScript (MCP SDK) |
+| [skill-creator](./skill-creator) | Create/modify/benchmark skills; meta-skill |
+
+### Web & search
+
+| Skill | Purpose |
+|---|---|
+| [web-browser](./web-browser) | Playwright browser automation (SPA, forms, screenshots) |
+| [web-search-searxng](./web-search-searxng) | Self-hosted meta-search (SearXNG, Docker-based) |
+| [web-search-tavily](./web-search-tavily) | AI-optimized search via Tavily API |
+| [webapp-testing](./webapp-testing) | Playwright e2e testing for local webapps |
+
+### Design & content
+
+| Skill | Purpose |
+|---|---|
+| [frontend-design](./frontend-design) | Production-grade UI (React/HTML/CSS), avoids generic AI aesthetic |
+| [web-artifacts-builder](./web-artifacts-builder) | React + Tailwind + shadcn/ui multi-component artifacts |
+| [diagram-generator](./diagram-generator) | Mermaid + Graphviz → SVG/PNG/PDF |
+| [theme-factory](./theme-factory) | Apply themes (10 presets + custom) to slides/docs/landings |
+| [brand-guidelines](./brand-guidelines) | Apply brand colors/typography to artifacts |
+| [internal-comms](./internal-comms) | Corporate writing (status updates, FAQs, incident reports) |
+
+### Meta
+
+| Skill | Purpose |
+|---|---|
+| [find-skills](./find-skills) | Discover and install additional skills from `skills.sh` registry when a capability is missing |
 
 ## Skill format
 
@@ -23,10 +54,9 @@ No Docker images, no gateway service, no external runtime — just markdown + sc
 skill-name/
 ├── SKILL.md           # YAML frontmatter + instructions for the agent
 ├── requirements.txt   # Python deps (when applicable)
-└── scripts/           # executables the agent invokes
+├── scripts/           # executables the agent invokes (optional)
+└── references/        # supplementary docs (optional)
 ```
-
-`SKILL.md` starts with a YAML block:
 
 ```yaml
 ---
@@ -38,22 +68,38 @@ license: MIT
 
 The `description` is what the agent reads to decide when to invoke the skill. The body explains how to use the scripts.
 
-## Install a single skill
+## Install
 
 ```bash
-cd skill-name
-pip install -r requirements.txt   # if present
-# install any system deps listed in SKILL.md (tesseract, graphviz, ...)
+# Clone
+git clone https://github.com/noesskeetit/openclaw-skills-for-valery.git
+cd openclaw-skills-for-valery
+git checkout manus-preset
+
+# Copy all skills into the OpenClaw workspace
+cp -R */ ~/.openclaw/workspace/skills/
+
+# Restart the gateway so it picks up new skills
+openclaw gateway restart
+
+# Verify
+openclaw skills list
 ```
 
-For skills that ship their own service (currently only `web-search-searxng`), the script auto-starts the container on first call — no manual setup needed beyond a working docker daemon.
+Per-skill setup (system deps / Python envs) is documented in each `SKILL.md`.
+
+## How this works (the "Manus" pattern)
+
+The agent loads all skills at session start and each skill's `description` acts as a trigger. When a user asks something that matches a skill, the agent invokes it. If nothing matches, the agent falls back to `find-skills` which queries the public `skills.sh` registry and can install a new skill on the fly.
+
+This gives Manus-like breadth without locking the agent into a single vendor or long-running autonomous mode.
 
 ## Resource footprint
 
 Designed to coexist on a small VM (≥2 GB RAM, ~10 GB disk). Heaviest skills:
 
-- **web-browser** — peak ~375 MB RAM per Chromium session
-- **diagram-generator** — peak ~500 MB-1 GB during Mermaid render
+- **web-browser / webapp-testing** — ~375 MB RAM per Chromium session
+- **diagram-generator** — up to ~1 GB during Mermaid render
 - **document-analyzer** — up to ~1 GB on large PDFs with OCR
 - **web-search-searxng** — ~200-300 MB resident as background container
 
@@ -61,12 +107,18 @@ Run heavy skills serially on constrained hardware.
 
 ## Adding a new skill
 
-1. Create `your-skill/` with `SKILL.md` and `scripts/`
-2. Use the YAML frontmatter format above
+1. Create `your-skill/` with `SKILL.md` and any scripts
+2. Fill the YAML frontmatter (`name`, `description`, `license`)
 3. Make `description` tell the agent **when** and **when NOT** to use the skill
 4. Document each script's CLI in `SKILL.md`
-5. Pin major versions in `requirements.txt` if Python deps are involved
+5. Open a PR against `manus-preset`
+
+## Credits
+
+- Original 8 skills — from the `main` branch of this repo
+- Anthropic skills (`frontend-design`, `webapp-testing`, `skill-creator`, `mcp-builder`, `web-artifacts-builder`, `brand-guidelines`, `internal-comms`, `theme-factory`) — from [anthropics/skills](https://github.com/anthropics/skills) (MIT/Apache license per folder)
+- `find-skills` — discovery helper around [skills.sh](https://skills.sh/) CLI
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+Each skill carries its own license file. Original code-runner, document-* and web-* skills are MIT (see [LICENSE](./LICENSE)). Anthropic-sourced skills carry their respective licenses inside each skill folder.
