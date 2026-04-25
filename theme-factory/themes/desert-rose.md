@@ -1,19 +1,19 @@
-# Desert Rose
+# Пустынная роза
 
-A soft and sophisticated theme with dusty, muted tones perfect for elegant presentations.
+Мягкая и изысканная тема с припылёнными тонами — для элегантных презентаций.
 
-## Color Palette
+## Цветовая палитра
 
-- **Dusty Rose**: `#d4a5a5` - Soft primary color
-- **Clay**: `#b87d6d` - Earthy accent
-- **Sand**: `#e8d5c4` - Warm neutral backgrounds
-- **Deep Burgundy**: `#5d2e46` - Rich dark contrast
+- **Припылённая роза**: `#d4a5a5` — мягкий основной цвет
+- **Глина**: `#b87d6d` — земляной акцент
+- **Песок**: `#e8d5c4` — тёплые нейтральные фоны
+- **Глубокий бордо**: `#5d2e46` — контрастный тёмный
 
-## Typography
+## Типографика
 
-- **Headers**: FreeSans Bold
-- **Body Text**: FreeSans
+- **Заголовки**: FreeSans Bold
+- **Основной текст**: FreeSans
 
-## Best Used For
+## Рекомендуется для
 
-Fashion presentations, beauty brands, wedding planning, interior design, boutique businesses.
+Fashion-презентации, beauty-бренды, wedding-планирование, интерьерный дизайн, бутиковый бизнес.

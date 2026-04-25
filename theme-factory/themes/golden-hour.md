@@ -1,19 +1,19 @@
-# Golden Hour
+# Золотой час
 
-A rich and warm autumnal palette that creates an inviting and sophisticated atmosphere.
+Богатая и тёплая осенняя палитра — создаёт уютную и изысканную атмосферу.
 
-## Color Palette
+## Цветовая палитра
 
-- **Mustard Yellow**: `#f4a900` - Bold primary accent
-- **Terracotta**: `#c1666b` - Warm secondary color
-- **Warm Beige**: `#d4b896` - Neutral backgrounds
-- **Chocolate Brown**: `#4a403a` - Dark text and anchors
+- **Горчичный**: `#f4a900` — основной акцент
+- **Терракотовый**: `#c1666b` — вторичный тёплый
+- **Тёплый бежевый**: `#d4b896` — нейтральные фоны
+- **Шоколадный**: `#4a403a` — тёмный текст и якоря
 
-## Typography
+## Типографика
 
-- **Headers**: FreeSans Bold
-- **Body Text**: FreeSans
+- **Заголовки**: FreeSans Bold
+- **Основной текст**: FreeSans
 
-## Best Used For
+## Рекомендуется для
 
-Restaurant presentations, hospitality brands, fall campaigns, cozy lifestyle content, artisan products.
+Рестораны, hospitality-бренды, осенние кампании, уютный лайфстайл-контент, крафтовые продукты.

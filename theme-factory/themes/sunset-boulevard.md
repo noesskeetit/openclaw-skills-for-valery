@@ -1,19 +1,19 @@
-# Sunset Boulevard
+# Бульвар заката
 
-A warm and vibrant theme inspired by golden hour sunsets, perfect for energetic and creative presentations.
+Тёплая и яркая тема в духе золотого часа — для энергичных и креативных презентаций.
 
-## Color Palette
+## Цветовая палитра
 
-- **Burnt Orange**: `#e76f51` - Primary accent color
-- **Coral**: `#f4a261` - Secondary warm accent
-- **Warm Sand**: `#e9c46a` - Highlighting and backgrounds
-- **Deep Purple**: `#264653` - Dark contrast and text
+- **Жжёно-оранжевый**: `#e76f51` — основной акцент
+- **Коралловый**: `#f4a261` — вторичный тёплый акцент
+- **Тёплый песок**: `#e9c46a` — подсветки и фоны
+- **Глубокий тёмный**: `#264653` — тёмный контраст и текст
 
-## Typography
+## Типографика
 
-- **Headers**: DejaVu Serif Bold
-- **Body Text**: DejaVu Sans
+- **Заголовки**: DejaVu Serif Bold
+- **Основной текст**: DejaVu Sans
 
-## Best Used For
+## Рекомендуется для
 
-Creative pitches, marketing presentations, lifestyle brands, event promotions, inspirational content.
+Креативные питчи, маркетинговые презентации, лайфстайл-бренды, промо событий, вдохновляющий контент.

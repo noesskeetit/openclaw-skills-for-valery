@@ -1,19 +1,19 @@
-# Modern Minimalist
+# Современный минимализм
 
-A clean and contemporary theme with a sophisticated grayscale palette for maximum versatility.
+Чистая и современная тема с изысканной монохромной палитрой — максимально универсальная.
 
-## Color Palette
+## Цветовая палитра
 
-- **Charcoal**: `#36454f` - Primary dark color
-- **Slate Gray**: `#708090` - Medium gray for accents
-- **Light Gray**: `#d3d3d3` - Backgrounds and dividers
-- **White**: `#ffffff` - Text and clean backgrounds
+- **Угольный**: `#36454f` — основной тёмный
+- **Сланцевый серый**: `#708090` — средний серый для акцентов
+- **Светло-серый**: `#d3d3d3` — фоны и разделители
+- **Белый**: `#ffffff` — текст и чистые фоны
 
-## Typography
+## Типографика
 
-- **Headers**: DejaVu Sans Bold
-- **Body Text**: DejaVu Sans
+- **Заголовки**: DejaVu Sans Bold
+- **Основной текст**: DejaVu Sans
 
-## Best Used For
+## Рекомендуется для
 
-Tech presentations, architecture portfolios, design showcases, modern business proposals, data visualization.
+Tech-презентации, архитектурные портфолио, дизайн-витрины, современные бизнес-предложения, визуализация данных.

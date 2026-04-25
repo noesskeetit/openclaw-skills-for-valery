@@ -1,19 +1,19 @@
-# Midnight Galaxy
+# Полуночная галактика
 
-A dramatic and cosmic theme with deep purples and mystical tones for impactful presentations.
+Драматичная и космическая тема с глубокими фиолетовыми и мистическими тонами.
 
-## Color Palette
+## Цветовая палитра
 
-- **Deep Purple**: `#2b1e3e` - Rich dark base
-- **Cosmic Blue**: `#4a4e8f` - Mystical mid-tone
-- **Lavender**: `#a490c2` - Soft accent color
-- **Silver**: `#e6e6fa` - Light highlights and text
+- **Глубокий пурпур**: `#2b1e3e` — насыщенная тёмная база
+- **Космический синий**: `#4a4e8f` — мистический средний тон
+- **Лаванда**: `#a490c2` — мягкий акцент
+- **Серебро**: `#e6e6fa` — светлые подсветки и текст
 
-## Typography
+## Типографика
 
-- **Headers**: FreeSans Bold
-- **Body Text**: FreeSans
+- **Заголовки**: FreeSans Bold
+- **Основной текст**: FreeSans
 
-## Best Used For
+## Рекомендуется для
 
-Entertainment industry, gaming presentations, nightlife venues, luxury brands, creative agencies.
+Развлекательная индустрия, игровые презентации, nightlife, luxury-бренды, креативные агентства.

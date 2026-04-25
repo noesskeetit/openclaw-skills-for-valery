@@ -1,19 +1,19 @@
-# Forest Canopy
+# Лесной полог
 
-A natural and grounded theme featuring earth tones inspired by dense forest environments.
+Природная, приземлённая тема в земляных тонах, вдохновлённая густым лесом.
 
-## Color Palette
+## Цветовая палитра
 
-- **Forest Green**: `#2d4a2b` - Primary dark green
-- **Sage**: `#7d8471` - Muted green accent
-- **Olive**: `#a4ac86` - Light accent color
-- **Ivory**: `#faf9f6` - Backgrounds and text
+- **Лесной зелёный**: `#2d4a2b` — основной тёмно-зелёный
+- **Шалфей**: `#7d8471` — приглушённый зелёный акцент
+- **Оливковый**: `#a4ac86` — светлый акцент
+- **Слоновая кость**: `#faf9f6` — фоны и текст
 
-## Typography
+## Типографика
 
-- **Headers**: FreeSerif Bold
-- **Body Text**: FreeSans
+- **Заголовки**: FreeSerif Bold
+- **Основной текст**: FreeSans
 
-## Best Used For
+## Рекомендуется для
 
-Environmental presentations, sustainability reports, outdoor brands, wellness content, organic products.
+Экологические презентации, отчёты по устойчивому развитию, outdoor-бренды, wellness-контент, органические продукты.

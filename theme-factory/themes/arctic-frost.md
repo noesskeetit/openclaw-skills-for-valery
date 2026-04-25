@@ -1,19 +1,19 @@
-# Arctic Frost
+# Арктический иней
 
-A cool and crisp winter-inspired theme that conveys clarity, precision, and professionalism.
+Прохладная и чёткая зимняя тема — передаёт ясность, точность и профессионализм.
 
-## Color Palette
+## Цветовая палитра
 
-- **Ice Blue**: `#d4e4f7` - Light backgrounds and highlights
-- **Steel Blue**: `#4a6fa5` - Primary accent color
-- **Silver**: `#c0c0c0` - Metallic accent elements
-- **Crisp White**: `#fafafa` - Clean backgrounds and text
+- **Ледяной голубой**: `#d4e4f7` — светлые фоны и подсветки
+- **Стальной синий**: `#4a6fa5` — основной акцент
+- **Серебряный**: `#c0c0c0` — металлические элементы
+- **Чистый белый**: `#fafafa` — чистые фоны и текст
 
-## Typography
+## Типографика
 
-- **Headers**: DejaVu Sans Bold
-- **Body Text**: DejaVu Sans
+- **Заголовки**: DejaVu Sans Bold
+- **Основной текст**: DejaVu Sans
 
-## Best Used For
+## Рекомендуется для
 
-Healthcare presentations, technology solutions, winter sports, clean tech, pharmaceutical content.
+Медицинские презентации, tech-решения, зимний спорт, clean-tech, фарм-контент.
