@@ -4,7 +4,7 @@ A curated skill pack that turns an OpenClaw (or compatible) agent into a general
 
 Target audience: **regular end users** (office, content, creative, communications) and **developers** (code, APIs, databases, MCPs). Each skill is a self-contained folder with a `SKILL.md`; no Docker gateway, no external runtime — just markdown + scripts.
 
-## Skills (23)
+## Skills (22)
 
 ### Documents & data
 
@@ -56,7 +56,6 @@ Target audience: **regular end users** (office, content, creative, communication
 | Skill | Purpose |
 |---|---|
 | [vision](./vision) | Image processing — resize, crop, convert (PNG/WebP), compress, watermark via ImageMagick |
-| [local-whisper](./local-whisper) | Local speech-to-text via OpenAI Whisper (offline after model download) |
 
 ### Meta
 
@@ -122,7 +121,6 @@ Designed to coexist on a small VM (≥2 GB RAM, ~10 GB disk). Heaviest skills:
 - **web-browser / webapp-testing** — ~375 MB RAM per Chromium session
 - **diagram-generator** — up to ~1 GB during Mermaid render
 - **document-analyzer** — up to ~1 GB on large PDFs with OCR
-- **local-whisper** — 1-4 GB VRAM or RAM depending on model size (tiny → large-v3)
 - **web-search-searxng** — ~200-300 MB resident as background container
 
 Run heavy skills serially on constrained hardware.
@@ -139,7 +137,7 @@ Run heavy skills serially on constrained hardware.
 
 - **Original 8 skills** (`code-runner`, `diagram-generator`, `document-analyzer`, `document-creator`, `git-assistant`, `web-browser`, `web-search-searxng`, `web-search-tavily`) — from the `main` branch of this repo
 - **Anthropic skills** (`frontend-design`, `webapp-testing`, `skill-creator`, `mcp-builder`, `web-artifacts-builder`, `theme-factory`, `doc-coauthoring`) — from [anthropics/skills](https://github.com/anthropics/skills)
-- **ClawHub community skills** (`gmail`, `google-calendar`, `slk`, `vision`, `local-whisper`, `sql-toolkit`, `api-tester`) — from [clawhub.ai](https://clawhub.ai/) (each retains its original license)
+- **ClawHub community skills** (`gmail`, `google-calendar`, `slk`, `vision`, `sql-toolkit`, `api-tester`) — from [clawhub.ai](https://clawhub.ai/) (each retains its original license)
 - **find-skills** — discovery helper around [skills.sh](https://skills.sh/) CLI
 
 ## License
