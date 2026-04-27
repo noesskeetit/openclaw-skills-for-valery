@@ -43,8 +43,6 @@ cat ~/.openclaw/workspace/.env
 
 Известные переменные пресета:
 - `TAVILY_API_KEY` — для `web-search-tavily`
-- `MATON_API_KEY` — для `gmail`
-- `GOOGLE_OAUTH_CREDS_PATH` — путь до `credentials.json` для `google-calendar`
 
 Skill `web-search-searxng` требует запущенного Docker — см. ниже.
 

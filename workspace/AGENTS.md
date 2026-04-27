@@ -58,8 +58,6 @@ grep -E '^TAVILY_API_KEY=' ~/.openclaw/workspace/.env | cut -d= -f2-
 
 Известные ключи в этом пресете:
 - `TAVILY_API_KEY` — для `web-search-tavily`
-- `MATON_API_KEY` — для `gmail` (managed OAuth via Maton)
-- `GOOGLE_OAUTH_CREDS_PATH` — путь к `credentials.json` для `google-calendar`
 - `web-search-searxng` — не env, а Docker container (см. «Local dev deps»)
 
 Если ключ есть в `.env` и не пустой — используй скил напрямую. Если ключа нет / пустой / файл не существует → следующая секция.
@@ -71,7 +69,6 @@ When a skill is the right tool but the env-file doesn't have what's needed, **st
 - Be explicit about what's missing and why it matters. Examples:
   - «`.env` не содержит `TAVILY_API_KEY`. У тебя есть ключ Tavily? Дай — впишу в `.env`, и сразу пойдём через скил.»
   - «Скил `web-search-searxng` требует Docker, а Docker не запущен. Запустить контейнер, или возьмём другой поисковый скил?»
-  - «`gmail` требует `MATON_API_KEY`. В `.env` пусто. Дашь — добавлю и настрою.»
   - «`document-analyzer` нужен `tesseract` для OCR — не вижу его в системе. Сейчас поставлю `brew install tesseract` (это локальный dev-dep, разрешено).»
 - **Wait for the answer** на ключ / OAuth / Docker. Не делай workaround в это время.
 - Когда ключ дали — **впиши в `.env`** (не в эфемерный shell env), затем зови скил.

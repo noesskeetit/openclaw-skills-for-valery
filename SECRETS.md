@@ -1,6 +1,6 @@
 # Skills secrets — what each skill needs
 
-Сводный гайд по credentials, OAuth, Docker и system deps для всех 22 скилов пресета.
+Сводный гайд по credentials, Docker и system deps для всех 19 скилов пресета.
 
 ## Где хранить
 
@@ -19,13 +19,11 @@ $EDITOR ~/.openclaw/workspace/.env
 
 Файл `.env` **не комитится** (gitignored). Агент читает его перед тем как использовать скил-кандидат, и если нужного ключа нет — **спросит тебя**, а не свалится в `curl` (см. правило в `workspace/AGENTS.md` секция «Skills environment»).
 
-## Ключи / OAuth
+## Ключи
 
 | Скил | Что нужно | Где взять | В `.env` |
 |---|---|---|---|
 | **`web-search-tavily`** | API key | https://tavily.com — бесплатно 1000 запросов/мес, без карты | `TAVILY_API_KEY=...` |
-| **`gmail`** | API key (managed OAuth) | https://maton.ai — Maton управляет OAuth от твоего имени | `MATON_API_KEY=...` |
-| **`google-calendar`** | OAuth credentials.json | Google Cloud Console → OAuth 2.0 Client ID → Desktop app → скачай JSON | `GOOGLE_OAUTH_CREDS_PATH=/path/to/credentials.json` |
 
 ## Docker
 
@@ -79,5 +77,5 @@ openclaw skills list
 
 - `.env` в gitignore — не комить.
 - Не выводи содержимое `.env` в чат / логи / коммиты.
-- Если ключ скомпрометирован — сразу ротируй на стороне провайдера (Tavily/Maton/Google).
+- Если ключ скомпрометирован — сразу ротируй на стороне провайдера (Tavily).
 - macOS Keychain — более безопасная альтернатива для production: можно вытаскивать через `security find-generic-password` и подсасывать в env при старте сессии.
