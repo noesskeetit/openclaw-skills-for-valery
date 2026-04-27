@@ -26,7 +26,6 @@ $EDITOR ~/.openclaw/workspace/.env
 | **`web-search-tavily`** | API key | https://tavily.com — бесплатно 1000 запросов/мес, без карты | `TAVILY_API_KEY=...` |
 | **`gmail`** | API key (managed OAuth) | https://maton.ai — Maton управляет OAuth от твоего имени | `MATON_API_KEY=...` |
 | **`google-calendar`** | OAuth credentials.json | Google Cloud Console → OAuth 2.0 Client ID → Desktop app → скачай JSON | `GOOGLE_OAUTH_CREDS_PATH=/path/to/credentials.json` |
-| **`slk`** | Slack desktop session | Установи Slack desktop, залогинься, потом `slk login` (он вытащит `xoxc-` token из сессии) | — (env не нужен) |
 
 ## Docker
 
@@ -66,7 +65,7 @@ brew install \
 
 Эти скилы работают сразу после `cp` без какой-либо настройки:
 
-`api-tester`, `code-runner` (после `pip install -r requirements.txt`), `doc-coauthoring`, `find-skills` (опц. установит `skills.sh` CLI сам), `frontend-design`, `git-assistant` (нужен только `git` + `gh`), `mcp-builder`, `skill-creator`, `sql-toolkit` (нужен sqlite3/psql/mysql client под твою БД), `theme-factory`, `web-artifacts-builder`.
+`api-tester`, `code-runner` (после `pip install -r requirements.txt`), `doc-coauthoring`, `find-skills` (опц. установит `skills.sh` CLI сам), `frontend-design`, `git-assistant` (нужен только `git` + `gh`), `mcp-builder`, `skill-creator`, `sql-toolkit` (нужен sqlite3/psql/mysql client под твою БД), `theme-factory`, `web-artifacts-builder`, `webapp-testing`.
 
 ## Проверить что скил готов
 

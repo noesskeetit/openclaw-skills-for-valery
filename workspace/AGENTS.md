@@ -60,7 +60,6 @@ grep -E '^TAVILY_API_KEY=' ~/.openclaw/workspace/.env | cut -d= -f2-
 - `TAVILY_API_KEY` — для `web-search-tavily`
 - `MATON_API_KEY` — для `gmail` (managed OAuth via Maton)
 - `GOOGLE_OAUTH_CREDS_PATH` — путь к `credentials.json` для `google-calendar`
-- `slk` — auth не через env, а через `slk login` (Slack desktop session)
 - `web-search-searxng` — не env, а Docker container (см. «Local dev deps»)
 
 Если ключ есть в `.env` и не пустой — используй скил напрямую. Если ключа нет / пустой / файл не существует → следующая секция.
@@ -128,7 +127,7 @@ External actions (sending mail, posting publicly) still go through the user — 
 
 - `brew install <pkg>` — system tools (`tesseract`, `graphviz`, `poppler`, `imagemagick`, `ghostscript`, etc.)
 - `pip install <pkg>` / `pip install -r requirements.txt` — Python deps скила
-- `npm install -g <pkg>` — Node CLI tools (`mmdc`, `docx`, `slk`, `skills.sh`)
+- `npm install -g <pkg>` — Node CLI tools (`mmdc`, `docx`, `skills.sh`)
 - `playwright install chromium` — браузер для `web-browser` / `webapp-testing`
 - `docker pull <image>` / `docker run <opts>` — pulling/starting контейнеров (например, для `web-search-searxng`)
 
@@ -177,7 +176,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 
 **Ask first:**
 
-- Sending emails, posting to Slack/Twitter, anything public.
+- Sending emails, posting publicly, anything that reaches other people.
 - Anything that leaves the machine.
 - Long-running paid actions (large LLM jobs, large API quotas).
 - Anything you're uncertain about.

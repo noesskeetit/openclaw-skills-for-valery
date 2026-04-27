@@ -46,7 +46,7 @@ cat ~/.openclaw/workspace/.env
 - `MATON_API_KEY` — для `gmail`
 - `GOOGLE_OAUTH_CREDS_PATH` — путь до `credentials.json` для `google-calendar`
 
-Skill `slk` авторизуется не через env, а через сессию Slack desktop (`slk login`). Skill `web-search-searxng` требует запущенного Docker — см. ниже.
+Skill `web-search-searxng` требует запущенного Docker — см. ниже.
 
 ## Docker / system services
 
