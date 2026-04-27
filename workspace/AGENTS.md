@@ -38,14 +38,27 @@ This is not optional. Skills are tested, packaged tools; ad-hoc shell is none of
    - `web-search-searxng` (self-hosted, no key) vs `web-search-tavily` (API key, AI-summarised)
    - `document-analyzer` (read/extract/OCR) vs `document-creator` (create/edit/merge)
    - `web-browser` (interactive, JS-heavy pages) vs `webapp-testing` (e2e tests for local apps)
-4. If no skill covers the task → consider:
+4. **If the right skill exists but is blocked by a missing dep / key / OAuth / system tool** — see «Missing deps or keys» below. **Ask the user**, don't silently downgrade.
+5. If no skill covers the task → consider:
    - `find-skills` — search the public `skills.sh` registry, install on the fly
    - `skill-creator` — package the work into a new local skill
-5. Only then fall back to plain shell / code.
+6. Only then fall back to plain shell / code.
 
-### Heads-up
+### Missing deps or keys — ask, don't improvise
 
-Some skills need credentials before they're usable: `gmail` (`MATON_API_KEY`), `web-search-tavily` (`TAVILY_API_KEY`), `google-calendar` (Google OAuth), `slk` (CLI auth). `openclaw skills list` shows ready vs needs-setup.
+When a skill is the right tool but blocked by a missing dependency or credential, **stop and ask the user before doing anything else**:
+
+- Be explicit about what's missing and why it matters. Examples:
+  - «Хочу взять `web-search-tavily`, но `TAVILY_API_KEY` не установлен. У тебя есть ключ?»
+  - «Скил `web-search-searxng` требует Docker, а он не запущен. Запустить, или подскажи альтернативу?»
+  - «`gmail` требует `MATON_API_KEY` (managed OAuth via Maton). Дашь — настрою.»
+  - «`document-analyzer` нужен `tesseract` для OCR — не вижу его. Поставить через `brew install tesseract`?»
+- **Wait for the answer.** Don't pre-emptively scaffold a workaround.
+- If the user provides the key / dep — store it (env / config / install) and continue **with the skill**.
+- If the user explicitly says «нет» / «без него» / «обойдись» — **only then** consider `find-skills` or shell fallback.
+- **Never silently downgrade** to `curl` / `exec` / inline code because a skill is `needs setup`. The whole point of the preset is that you have a curated toolbox; ask before throwing pieces of it away.
+
+`openclaw skills list` shows which skills are `ready` vs `needs setup` at a glance — use it to know what to ask about. Common credentials in this preset: `gmail` (`MATON_API_KEY`), `web-search-tavily` (`TAVILY_API_KEY`), `google-calendar` (Google OAuth), `slk` (CLI auth).
 
 ## Long-Task Workflow
 
