@@ -35,7 +35,6 @@ That's it. No keys required for 18 of the 19 skills (only `web-search-tavily` is
 - [Adding a new skill](#adding-a-new-skill)
 - [What's intentionally not included](#whats-intentionally-not-included)
 - [Credits](#credits)
-- [License](#license)
 
 ## Repo layout
 
@@ -48,8 +47,6 @@ openclaw-skills-for-valery/
 │   └── .env.example   # Secrets keystore template
 ├── skills/            # 19 self-contained skills (each with SKILL.md)
 ├── SECRETS.md         # Per-skill credentials map (full reference)
-├── CHANGELOG.md
-├── CONTRIBUTING.md
 └── README.md
 ```
 
@@ -241,8 +238,6 @@ If you've customised the bootstrap files locally, back them up before re-copying
 
 ## Adding a new skill
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Short version:
-
 1. Create `skills/your-skill/` with `SKILL.md` and any scripts
 2. Fill the YAML frontmatter (`name`, `description`, `license`)
 3. Make `description` tell the agent **when** and **when NOT** to use the skill
@@ -266,6 +261,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Short version:
 - **find-skills** — discovery helper around [skills.sh](https://skills.sh/) CLI
 - **Bootstrap pattern** — informed by the canonical OpenClaw workspace templates (`docs/reference/templates/AGENTS.md`, `SOUL.md`) and the Manus.im operating principles (the original inspiration; this preset is independent)
 
-## License
-
-Each skill carries its own license file. Original `code-runner`, `document-*`, `web-*` skills are MIT (see [LICENSE](./LICENSE)). Third-party skills carry their respective licenses inside each skill folder. Bootstrap files (`workspace/AGENTS.md`, `workspace/SOUL.md`) are MIT.
