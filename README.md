@@ -1,25 +1,61 @@
-# OpenClaw Skills — Manus Preset
+# OpenClaw Skills — Universal Agent
 
-A curated skill pack **plus** workspace bootstrap that flips an OpenClaw agent onto **Manus-style rails**: skills-first dispatch, long-task autonomy, todo-driven workflow. Sources: the original valery skill set + Anthropic's official `anthropics/skills` + ClawHub community skills + a skill-discovery fallback.
+**A skill pack + workspace bootstrap that turns OpenClaw into a universal autonomous agent.** 19 self-contained skills across 7 use-case categories, plus two markdown files (`AGENTS.md` + `SOUL.md`) that switch the agent onto skills-first dispatch and long-task autonomy rails.
 
-Target audience: **regular end users** (office, content, creative, communications) and **developers** (code, APIs, databases, MCPs). Each skill is a self-contained folder with a `SKILL.md`; the bootstrap is two markdown files. No Docker gateway, no install scripts — just files you copy where you need them.
+> No Docker gateway. No install scripts. Just files you copy into `~/.openclaw/workspace/`. The agent reads `.env` for keys, asks before falling back, and installs missing dev deps itself.
+
+## TL;DR
+
+```bash
+git clone https://github.com/noesskeetit/openclaw-skills-for-valery.git
+cd openclaw-skills-for-valery
+cp -R skills/. ~/.openclaw/workspace/skills/
+cp workspace/AGENTS.md workspace/SOUL.md ~/.openclaw/workspace/
+cp workspace/.env.example ~/.openclaw/workspace/.env
+openclaw gateway restart && openclaw skills list
+```
+
+That's it. No keys required for 18 of the 19 skills (only `web-search-tavily` is paid — and there's a keyless `web-search-searxng` alternative). Heavy `brew`-deps the agent installs on demand.
+
+---
+
+## Contents
+
+- [Repo layout](#repo-layout)
+- [Skills (19) — by use case](#skills-19--by-use-case)
+- [What's in the bootstrap](#whats-in-the-bootstrap)
+- [Install](#install)
+- [Per-skill setup (env / Docker / deps)](#per-skill-setup-env--docker--deps)
+- [Skill format](#skill-format)
+- [How this works (skills-first pattern)](#how-this-works-skills-first-pattern)
+- [Resource footprint](#resource-footprint)
+- [Updating](#updating)
+- [Adding a new skill](#adding-a-new-skill)
+- [What's intentionally not included](#whats-intentionally-not-included)
+- [Credits](#credits)
+- [License](#license)
 
 ## Repo layout
 
 ```
 openclaw-skills-for-valery/
-├── workspace/         # Bootstrap that switches OpenClaw onto Manus rails
-│   ├── AGENTS.md      # Operating rules: Skills Protocol + Long-Task Workflow
-│   └── SOUL.md        # Mindset: Long Autonomy + Skills-First reflex
-├── skills/            # 22 skills (each a self-contained folder with SKILL.md)
+├── workspace/         # Bootstrap that flips OpenClaw onto universal-agent rails
+│   ├── AGENTS.md      # Operating rules (Skills Protocol + Long-Task Workflow)
+│   ├── SOUL.md        # Mindset (Long Autonomy + Skills-First reflex)
+│   ├── TOOLS.md       # Environment notes pointer (.env, Docker, brew deps)
+│   └── .env.example   # Secrets keystore template
+├── skills/            # 19 self-contained skills (each with SKILL.md)
+├── SECRETS.md         # Per-skill credentials map (full reference)
+├── CHANGELOG.md
+├── CONTRIBUTING.md
 └── README.md
 ```
 
-The two folders mirror the layout of `~/.openclaw/workspace/` so you can drop them in directly, or you can cherry-pick whatever you want and integrate the way that fits your setup.
+The two folders mirror `~/.openclaw/workspace/` layout — drop them in directly, or cherry-pick whatever you need.
 
 ## Skills (19) — by use case
 
-Группировка по сценариям пользователя, а не по технологии. Большинство скилов работает «из коробки», некоторые требуют ключей или Docker — см. [SECRETS.md](./SECRETS.md) для полного списка.
+Сгруппированы по сценариям пользователя, а не по технологии. Большинство работает «из коробки» — credentials/Docker нужны только там, где это явно отмечено.
 
 ### 🧑‍💻 Для разработки
 
@@ -49,7 +85,7 @@ The two folders mirror the layout of `~/.openclaw/workspace/` so you can drop th
 
 | Skill | Что делает |
 |---|---|
-| [web-search-tavily](./skills/web-search-tavily) | AI-оптимизированный поиск через Tavily API (нужен ключ) |
+| [web-search-tavily](./skills/web-search-tavily) | AI-оптимизированный поиск через Tavily API (нужен ключ — бесплатно 1k req/мес) |
 | [web-search-searxng](./skills/web-search-searxng) | Self-hosted мета-поиск (SearXNG в Docker, без ключей) |
 | [web-browser](./skills/web-browser) | Полноценный браузер (Playwright + Chromium) — для SPA, форм, скриншотов |
 
@@ -67,15 +103,11 @@ Frontend, диаграммы, темизация, совместная рабо�
 
 ### 🖼️ Для медиа
 
-Изображения.
-
 | Skill | Что делает |
 |---|---|
 | [vision](./skills/vision) | Resize, crop, конверт (PNG/WebP), сжать, watermark через ImageMagick |
 
 ### 🧪 Для тестирования
-
-E2E-тесты локальных веб-приложений.
 
 | Skill | Что делает |
 |---|---|
@@ -83,20 +115,25 @@ E2E-тесты локальных веб-приложений.
 
 ### 🧭 Для самопрокачки агента
 
-Расширение инвентаря.
-
 | Skill | Что делает |
 |---|---|
 | [find-skills](./skills/find-skills) | Поиск и установка скилов из публичного `skills.sh` registry — когда ничего не подходит |
 
 ## What's in the bootstrap
 
-Two files, ~200 lines combined. Together they switch a default OpenClaw onto Manus rails.
+Two markdown files (~250 lines combined) flip a default OpenClaw onto universal-agent rails:
 
-- **[`workspace/AGENTS.md`](./workspace/AGENTS.md)** (~140 lines) — operating rules. The big new section is **Skills Protocol**: dispatch order, default reflex ("before writing curl, check whether a skill does it"), conflict-pair guidance (`searxng` vs `tavily` etc.), escape hatches (`find-skills`, `skill-creator`). The other big section is **Long-Task Workflow**: sticky `memory/todo.md`, file-as-memory in `memory/scratch/`, leave-wrong-turns markers, checkpointing after big moves. Red Lines and External-vs-Internal are kept from the canonical OpenClaw template.
-- **[`workspace/SOUL.md`](./workspace/SOUL.md)** (~60 lines) — mindset. **Long Autonomy** (default to keep going on long tasks, park doubts in todo, file-as-memory) and **Skills-First Mindset** (inventory awareness, read SKILL.md before improvising, two escape hatches) are the new sections. Core Truths, Boundaries, Continuity are inherited from the template.
+- **[`workspace/AGENTS.md`](./workspace/AGENTS.md)** (~190 lines) — operating rules:
+  - **Skills Protocol** — dispatch order, default reflex («before writing curl, check the catalogue»), conflict-pair guidance (`searxng` vs `tavily`, `analyzer` vs `creator`), escape hatches (`find-skills`, `skill-creator`).
+  - **Skills environment** — `.env` keystore as the single source of truth for credentials.
+  - **Missing deps or keys** — agent stops and asks the user instead of silent fallback to curl/exec.
+  - **Long-Task Workflow** — sticky `memory/todo.md`, file-as-memory in `memory/scratch/`, `WRONG_TURN:` markers, checkpoints after big moves.
+  - **Local dev deps — install freely** — explicit permission to run `brew install`, `pip install`, `npm install -g`, `playwright install`, `docker pull` without asking.
+  - Red Lines + External-vs-Internal kept from the canonical OpenClaw template.
 
-The other five canonical OpenClaw bootstrap files (`BOOTSTRAP.md`, `IDENTITY.md`, `USER.md`, `TOOLS.md`, `HEARTBEAT.md`) are intentionally **not** part of the preset — they're personal / environment-specific and the user fills them in themselves.
+- **[`workspace/SOUL.md`](./workspace/SOUL.md)** (~60 lines) — mindset: **Long Autonomy** (default to keep going, park doubts in todo, file-as-memory) + **Skills-First Mindset** (inventory awareness, read SKILL.md before improvising, two escape hatches). Core Truths, Boundaries, Continuity inherited from the template.
+
+The other five canonical OpenClaw bootstrap files (`BOOTSTRAP.md`, `IDENTITY.md`, `USER.md`, `TOOLS.md`, `HEARTBEAT.md`) are intentionally **not** part of the preset — they're personal / environment-specific and the user fills them in themselves (or lets `BOOTSTRAP.md` do its first-run dialogue).
 
 ## Install
 
@@ -105,7 +142,6 @@ Two `cp` commands and a gateway restart. Nothing fancier — that's by design.
 ```bash
 git clone https://github.com/noesskeetit/openclaw-skills-for-valery.git
 cd openclaw-skills-for-valery
-git checkout manus-preset
 
 # 1. Copy all skills into the OpenClaw workspace
 cp -R skills/. ~/.openclaw/workspace/skills/
@@ -134,19 +170,19 @@ cp ~/.openclaw/workspace/AGENTS.md ~/.openclaw/workspace/AGENTS.md.bak
 cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
 ```
 
-…then either replace or merge by hand. The "What's in the bootstrap" section above is a quick map of the new sections so you know what to splice in.
+…then either replace or merge by hand. Use the **What's in the bootstrap** section above as a map of what to splice in.
 
-### Per-skill setup (env / OAuth / system deps)
+## Per-skill setup (env / Docker / deps)
 
-Полный список ключей, OAuth-флоу, Docker и system deps по всем 22 скилам — **[SECRETS.md](./SECRETS.md)**.
+Полный список ключей, Docker и system deps по всем 19 скилам — **[SECRETS.md](./SECRETS.md)**.
 
 TL;DR: всё кладётся в `~/.openclaw/workspace/.env` (template — [`workspace/.env.example`](./workspace/.env.example)). Заполнять заранее не обязательно — агент сам спросит, когда понадобится ключ для конкретного скила (это правило прописано в `workspace/AGENTS.md`).
 
-Скилы, которым нужны credentials:
-
-- `web-search-tavily` — `TAVILY_API_KEY` (бесплатно 1k req/мес на tavily.com)
-
-Скилы, которым нужен **Docker**: `web-search-searxng`. Скилы, которым нужны **system deps** (`tesseract`, `graphviz`, `poppler`, `imagemagick`, `ghostscript`, `pandoc`, …): агент **сам ставит** через `brew install` при необходимости (см. AGENTS.md «Local dev deps — install freely»).
+| Что | Кому нужно | Как получить |
+|---|---|---|
+| `TAVILY_API_KEY` | `web-search-tavily` (опц.) | https://tavily.com — бесплатно 1k req/мес, без карты |
+| Docker | `web-search-searxng` (опц.) | `brew install --cask docker` |
+| brew packages (`tesseract`, `graphviz`, `poppler`, `imagemagick`, `ghostscript`, `pandoc`, `libreoffice`) | разные скилы | агент **сам ставит** через `brew install` при необходимости (см. AGENTS.md «Local dev deps — install freely») |
 
 `openclaw skills list` показывает `ready` vs `needs setup` за один взгляд.
 
@@ -170,13 +206,13 @@ license: MIT
 
 The `description` is what the agent reads to decide when to invoke the skill. The body explains how to use the scripts.
 
-## How this works (the "Manus" pattern)
+## How this works (skills-first pattern)
 
-The agent loads `AGENTS.md` and `SOUL.md` at session start. They tell it the **default reflex** is to check `skills/` before writing code, to use `openclaw skills list` to compare similar skills, and to fall back to `find-skills` when nothing matches. Each skill's `description` in `SKILL.md` acts as the trigger.
+The agent loads `AGENTS.md` and `SOUL.md` at session start. They tell it the **default reflex** is to check `skills/` before writing code, to use `openclaw skills list` to compare similar skills, and to fall back to `find-skills` only when nothing matches. Each skill's `description` in `SKILL.md` acts as the trigger.
 
 For long tasks the agent maintains `memory/todo.md` as sticky context, dumps heavy intermediate state into `memory/scratch/`, marks `WRONG_TURN:` lines for dead-ends, and checkpoints after big moves — that's the autonomy half of the preset.
 
-Together: skills give Manus-like breadth, the bootstrap gives Manus-like discipline.
+Together: skills give wide breadth, the bootstrap gives hardened discipline.
 
 ## Resource footprint
 
@@ -203,11 +239,22 @@ If you've customised the bootstrap files locally, back them up before re-copying
 
 ## Adding a new skill
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Short version:
+
 1. Create `skills/your-skill/` with `SKILL.md` and any scripts
 2. Fill the YAML frontmatter (`name`, `description`, `license`)
 3. Make `description` tell the agent **when** and **when NOT** to use the skill
 4. Document each script's CLI in `SKILL.md`
-5. Open a PR against `manus-preset`
+5. Open a PR against the `universal-agent` branch
+
+## What's intentionally not included
+
+Прозрачности ради — что ты в этом пресете **не найдёшь** (и почему):
+
+- **Email / Calendar / Slack** (`gmail`, `google-calendar`, `slk`) — нагрузка по OAuth-настройке высокая для general-purpose пресета. Если нужны — поставь индивидуально через `find-skills` или из ClawHub.
+- **Voice / TTS / STT** — есть `openai-whisper` и `eleven-labs-tts` в bundled OpenClaw skills, ставятся одной командой если понадобятся.
+- **Cloud-specific tooling** (AWS / GCP / Azure CLI) — слишком сильная зависимость от среды; смысла прокидывать в общий пресет нет.
+- **`BOOTSTRAP.md` / `IDENTITY.md` / `USER.md` / `TOOLS.md` / `HEARTBEAT.md`** в `workspace/` — они персональные. Если у тебя свежий OpenClaw — `openclaw setup` создаст дефолтные template'ы, дальше заполняй сам.
 
 ## Credits
 
@@ -215,7 +262,7 @@ If you've customised the bootstrap files locally, back them up before re-copying
 - **Anthropic skills** (`frontend-design`, `webapp-testing`, `skill-creator`, `mcp-builder`, `web-artifacts-builder`, `theme-factory`, `doc-coauthoring`) — from [anthropics/skills](https://github.com/anthropics/skills)
 - **ClawHub community skills** (`vision`, `sql-toolkit`, `api-tester`) — from [clawhub.ai](https://clawhub.ai/) (each retains its original license)
 - **find-skills** — discovery helper around [skills.sh](https://skills.sh/) CLI
-- **Bootstrap pattern** — informed by the canonical OpenClaw workspace templates (`docs/reference/templates/AGENTS.md`, `SOUL.md`) and the Manus.im operating principles
+- **Bootstrap pattern** — informed by the canonical OpenClaw workspace templates (`docs/reference/templates/AGENTS.md`, `SOUL.md`) and the Manus.im operating principles (the original inspiration; this preset is independent)
 
 ## License
 
