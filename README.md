@@ -17,64 +17,87 @@ openclaw-skills-for-valery/
 
 The two folders mirror the layout of `~/.openclaw/workspace/` so you can drop them in directly, or you can cherry-pick whatever you want and integrate the way that fits your setup.
 
-## Skills (22)
+## Skills (22) — by use case
 
-### Documents & data
+Группировка по сценариям пользователя, а не по технологии. Большинство скилов работает «из коробки», некоторые требуют ключей или Docker — см. [SECRETS.md](./SECRETS.md) для полного списка.
 
-| Skill | Purpose |
+### 🧑‍💻 Для разработки
+
+Кодинг, API, Git, MCP-серверы, расширение собственных возможностей.
+
+| Skill | Что делает |
 |---|---|
-| [document-analyzer](./skills/document-analyzer) | Read/extract/OCR PDF, DOCX, XLSX, PPTX, CSV; PDF form filling |
-| [document-creator](./skills/document-creator) | Create DOCX, XLSX, PPTX, PDF with OOXML validation |
-| [sql-toolkit](./skills/sql-toolkit) | SQLite/PostgreSQL/MySQL — schema design, queries, migrations, indexing, backup/restore |
+| [code-runner](./skills/code-runner) | Выполнить Python / JavaScript, поймать stdout/stderr/files |
+| [git-assistant](./skills/git-assistant) | Коммиты с осмысленными сообщениями, ревью diff'ов, PR-описания |
+| [api-tester](./skills/api-tester) | Структурные HTTP-запросы (GET/POST/PUT/DELETE) с заголовками и JSON — без ручного `curl` |
+| [mcp-builder](./skills/mcp-builder) | Собрать MCP-сервер на Python (FastMCP) или TypeScript (MCP SDK) |
+| [skill-creator](./skills/skill-creator) | Создать / отредактировать / прогнать eval'ы по своему скилу — meta-skill |
 
-### Code & development
+### 📊 Для анализа и работы с документами
 
-| Skill | Purpose |
+Чтение/создание PDF, DOCX, XLSX, PPTX, работа с SQL.
+
+| Skill | Что делает |
 |---|---|
-| [code-runner](./skills/code-runner) | Execute Python / JavaScript with stdout/stderr/file capture |
-| [git-assistant](./skills/git-assistant) | Commits, code review, PR descriptions |
-| [api-tester](./skills/api-tester) | Structured HTTP/HTTPS requests (GET/POST/PUT/DELETE) with custom headers + JSON |
-| [mcp-builder](./skills/mcp-builder) | Build MCP servers in Python (FastMCP) or TypeScript (MCP SDK) |
-| [skill-creator](./skills/skill-creator) | Create/modify/benchmark skills; meta-skill |
+| [document-analyzer](./skills/document-analyzer) | Прочесть / распарсить / OCR-нуть PDF, DOCX, XLSX, PPTX, CSV; заполнить PDF-формы |
+| [document-creator](./skills/document-creator) | Создать DOCX, XLSX, PPTX, PDF с валидацией OOXML |
+| [sql-toolkit](./skills/sql-toolkit) | SQLite/PostgreSQL/MySQL — схемы, запросы, миграции, индексы, бэкапы |
 
-### Web & search
+### 🔍 Для исследований
 
-| Skill | Purpose |
+Поиск, рендеринг JS-страниц, скрейпинг.
+
+| Skill | Что делает |
 |---|---|
-| [web-browser](./skills/web-browser) | Playwright browser automation (SPA, forms, screenshots) |
-| [web-search-searxng](./skills/web-search-searxng) | Self-hosted meta-search (SearXNG, Docker-based) |
-| [web-search-tavily](./skills/web-search-tavily) | AI-optimized search via Tavily API |
-| [webapp-testing](./skills/webapp-testing) | Playwright e2e testing for local webapps |
+| [web-search-tavily](./skills/web-search-tavily) | AI-оптимизированный поиск через Tavily API (нужен ключ) |
+| [web-search-searxng](./skills/web-search-searxng) | Self-hosted мета-поиск (SearXNG в Docker, без ключей) |
+| [web-browser](./skills/web-browser) | Полноценный браузер (Playwright + Chromium) — для SPA, форм, скриншотов |
 
-### Design & content
+### 🎨 Для дизайна и контента
 
-| Skill | Purpose |
+Frontend, диаграммы, темизация, совместная работа над текстами.
+
+| Skill | Что делает |
 |---|---|
-| [frontend-design](./skills/frontend-design) | Production-grade UI (React/HTML/CSS), avoids generic AI aesthetic |
-| [web-artifacts-builder](./skills/web-artifacts-builder) | React + Tailwind + shadcn/ui multi-component artifacts |
-| [diagram-generator](./skills/diagram-generator) | Mermaid + Graphviz → SVG/PNG/PDF |
-| [theme-factory](./skills/theme-factory) | Apply themes (10 presets + custom) to slides/docs/landings |
-| [doc-coauthoring](./skills/doc-coauthoring) | Structured workflow for collaborative docs (proposals, PRDs, RFCs, specs) |
+| [frontend-design](./skills/frontend-design) | Production-grade UI (React/HTML/CSS) с дизайн-вкусом, без AI-стандарта |
+| [web-artifacts-builder](./skills/web-artifacts-builder) | Мульти-компонентные React + Tailwind + shadcn/ui артефакты |
+| [diagram-generator](./skills/diagram-generator) | Mermaid + Graphviz → SVG/PNG/PDF (mind-maps, ER, sequence, flowchart) |
+| [theme-factory](./skills/theme-factory) | 10 готовых тем + свои — для слайдов, доков, лендингов |
+| [doc-coauthoring](./skills/doc-coauthoring) | Структурный воркфлоу для PRD / RFC / proposal'ов |
 
-### Communications
+### 💬 Для коммуникаций
 
-| Skill | Purpose |
+Почта, календарь, Slack — чтение, отправка, поиск.
+
+| Skill | Что делает |
 |---|---|
-| [gmail](./skills/gmail) | Read/send/manage Gmail emails, threads, labels, drafts (managed OAuth) |
-| [google-calendar](./skills/google-calendar) | List/create/update/delete calendar events via Google Calendar API |
-| [slk](./skills/slk) | Read/send/search/manage Slack messages and DMs via `slk` CLI |
+| [gmail](./skills/gmail) | Читать / отправлять / искать письма, треды, ярлыки, черновики (managed OAuth, нужен `MATON_API_KEY`) |
+| [google-calendar](./skills/google-calendar) | Список / создать / обновить / удалить события (Google OAuth) |
+| [slk](./skills/slk) | Slack-сообщения, DM, поиск, drafts (auth через Slack desktop session) |
 
-### Media
+### 🖼️ Для медиа
 
-| Skill | Purpose |
+Изображения.
+
+| Skill | Что делает |
 |---|---|
-| [vision](./skills/vision) | Image processing — resize, crop, convert (PNG/WebP), compress, watermark via ImageMagick |
+| [vision](./skills/vision) | Resize, crop, конверт (PNG/WebP), сжать, watermark через ImageMagick |
 
-### Meta
+### 🧪 Для тестирования
 
-| Skill | Purpose |
+E2E-тесты локальных веб-приложений.
+
+| Skill | Что делает |
 |---|---|
-| [find-skills](./skills/find-skills) | Discover and install additional skills from `skills.sh` registry when a capability is missing |
+| [webapp-testing](./skills/webapp-testing) | Playwright e2e — кликать, заполнять формы, снимать скриншоты, читать console |
+
+### 🧭 Для самопрокачки агента
+
+Расширение инвентаря.
+
+| Skill | Что делает |
+|---|---|
+| [find-skills](./skills/find-skills) | Поиск и установка скилов из публичного `skills.sh` registry — когда ничего не подходит |
 
 ## What's in the bootstrap
 
@@ -100,10 +123,13 @@ cp -R skills/. ~/.openclaw/workspace/skills/
 # 2. Copy the two bootstrap files into the workspace root
 cp workspace/AGENTS.md workspace/SOUL.md ~/.openclaw/workspace/
 
-# 3. Restart the gateway so it picks up new skills
+# 3. Create the secrets keystore (keep blank — agent will ask before using a skill that needs a key)
+cp workspace/.env.example ~/.openclaw/workspace/.env
+
+# 4. Restart the gateway so it picks up new skills
 openclaw gateway restart
 
-# 4. Verify
+# 5. Verify
 openclaw skills list
 ```
 
@@ -122,14 +148,20 @@ cp ~/.openclaw/workspace/SOUL.md ~/.openclaw/workspace/SOUL.md.bak
 
 ### Per-skill setup (env / OAuth / system deps)
 
-Each skill's `SKILL.md` has the details. Skills requiring credentials:
+Полный список ключей, OAuth-флоу, Docker и system deps по всем 22 скилам — **[SECRETS.md](./SECRETS.md)**.
 
+TL;DR: всё кладётся в `~/.openclaw/workspace/.env` (template — [`workspace/.env.example`](./workspace/.env.example)). Заполнять заранее не обязательно — агент сам спросит, когда понадобится ключ для конкретного скила (это правило прописано в `workspace/AGENTS.md`).
+
+Скилы, которым нужны credentials:
+
+- `web-search-tavily` — `TAVILY_API_KEY` (бесплатно 1k req/мес на tavily.com)
 - `gmail` — `MATON_API_KEY` (managed OAuth via Maton)
-- `google-calendar` — Google OAuth credentials
-- `slk` — Slack workspace auth via `slk` CLI
-- `web-search-tavily` — `TAVILY_API_KEY`
+- `google-calendar` — Google OAuth `credentials.json`
+- `slk` — `slk login` (вытаскивает session token из Slack desktop)
 
-`openclaw skills list` shows ready vs needs-setup at a glance.
+Скилы, которым нужен **Docker**: `web-search-searxng`. Скилы, которым нужны **system deps** (`tesseract`, `graphviz`, `poppler`, `imagemagick`, `ghostscript`, `pandoc`, …): агент **сам ставит** через `brew install` при необходимости (см. AGENTS.md «Local dev deps — install freely»).
+
+`openclaw skills list` показывает `ready` vs `needs setup` за один взгляд.
 
 ## Skill format
 

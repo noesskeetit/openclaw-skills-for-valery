@@ -44,21 +44,42 @@ This is not optional. Skills are tested, packaged tools; ad-hoc shell is none of
    - `skill-creator` — package the work into a new local skill
 6. Only then fall back to plain shell / code.
 
+### Skills environment — `.env` is the keystore
+
+Все credentials для скилов лежат в одном файле: **`~/.openclaw/workspace/.env`** (path относительно workspace = `.env`).
+
+**Перед тем как сказать «не вижу ключа»** — прочитай файл сам:
+
+```bash
+cat ~/.openclaw/workspace/.env 2>/dev/null
+# или если нужна одна переменная:
+grep -E '^TAVILY_API_KEY=' ~/.openclaw/workspace/.env | cut -d= -f2-
+```
+
+Известные ключи в этом пресете:
+- `TAVILY_API_KEY` — для `web-search-tavily`
+- `MATON_API_KEY` — для `gmail` (managed OAuth via Maton)
+- `GOOGLE_OAUTH_CREDS_PATH` — путь к `credentials.json` для `google-calendar`
+- `slk` — auth не через env, а через `slk login` (Slack desktop session)
+- `web-search-searxng` — не env, а Docker container (см. «Local dev deps»)
+
+Если ключ есть в `.env` и не пустой — используй скил напрямую. Если ключа нет / пустой / файл не существует → следующая секция.
+
 ### Missing deps or keys — ask, don't improvise
 
-When a skill is the right tool but blocked by a missing dependency or credential, **stop and ask the user before doing anything else**:
+When a skill is the right tool but the env-file doesn't have what's needed, **stop and ask the user before doing anything else**:
 
 - Be explicit about what's missing and why it matters. Examples:
-  - «Хочу взять `web-search-tavily`, но `TAVILY_API_KEY` не установлен. У тебя есть ключ?»
-  - «Скил `web-search-searxng` требует Docker, а он не запущен. Запустить, или подскажи альтернативу?»
-  - «`gmail` требует `MATON_API_KEY` (managed OAuth via Maton). Дашь — настрою.»
-  - «`document-analyzer` нужен `tesseract` для OCR — не вижу его. Поставить через `brew install tesseract`?»
-- **Wait for the answer.** Don't pre-emptively scaffold a workaround.
-- If the user provides the key / dep — store it (env / config / install) and continue **with the skill**.
-- If the user explicitly says «нет» / «без него» / «обойдись» — **only then** consider `find-skills` or shell fallback.
-- **Never silently downgrade** to `curl` / `exec` / inline code because a skill is `needs setup`. The whole point of the preset is that you have a curated toolbox; ask before throwing pieces of it away.
+  - «`.env` не содержит `TAVILY_API_KEY`. У тебя есть ключ Tavily? Дай — впишу в `.env`, и сразу пойдём через скил.»
+  - «Скил `web-search-searxng` требует Docker, а Docker не запущен. Запустить контейнер, или возьмём другой поисковый скил?»
+  - «`gmail` требует `MATON_API_KEY`. В `.env` пусто. Дашь — добавлю и настрою.»
+  - «`document-analyzer` нужен `tesseract` для OCR — не вижу его в системе. Сейчас поставлю `brew install tesseract` (это локальный dev-dep, разрешено).»
+- **Wait for the answer** на ключ / OAuth / Docker. Не делай workaround в это время.
+- Когда ключ дали — **впиши в `.env`** (не в эфемерный shell env), затем зови скил.
+- Если человек явно говорит «нет» / «без него» / «обойдись» — **только тогда** иди в `find-skills` или shell fallback.
+- **Never silently downgrade** to `curl` / `exec` / inline code, если скил blocked credential'ом. Curated toolbox теряет смысл от тихого fallback'а.
 
-`openclaw skills list` shows which skills are `ready` vs `needs setup` at a glance — use it to know what to ask about. Common credentials in this preset: `gmail` (`MATON_API_KEY`), `web-search-tavily` (`TAVILY_API_KEY`), `google-calendar` (Google OAuth), `slk` (CLI auth).
+`openclaw skills list` показывает `ready` vs `needs setup` — используй чтобы знать заранее, что спросить.
 
 ## Long-Task Workflow
 
@@ -100,6 +121,25 @@ The whole point of the preset is that you can take longer tasks without constant
 4. Only then ask, and ask once with the alternatives spelled out.
 
 External actions (sending mail, posting publicly) still go through the user — see Red Lines.
+
+## Local dev deps — install freely
+
+Локальные пакеты для setup'а скилов — **ставь сам**, не спрашивай:
+
+- `brew install <pkg>` — system tools (`tesseract`, `graphviz`, `poppler`, `imagemagick`, `ghostscript`, etc.)
+- `pip install <pkg>` / `pip install -r requirements.txt` — Python deps скила
+- `npm install -g <pkg>` — Node CLI tools (`mmdc`, `docx`, `slk`, `skills.sh`)
+- `playwright install chromium` — браузер для `web-browser` / `webapp-testing`
+- `docker pull <image>` / `docker run <opts>` — pulling/starting контейнеров (например, для `web-search-searxng`)
+
+Это **не** «leaves the machine» в опасном смысле — это setup твоего toolbox'а. Сообщи постфактум: «поставил `tesseract` чтобы `document-analyzer` мог OCR-ить, продолжаю». Это **не** Red Line.
+
+**Кроме** (всё ещё спрашивай):
+- Подозрительные имена пакетов / неизвестные источники.
+- Пакеты, требующие sudo для установки (если в системе non-Homebrew Linux и нужен `sudo apt`).
+- Глобальные конфиги, которые меняют поведение других пользователей.
+
+API-ключи / OAuth credentials всё ещё через `.env` + ask user (см. «Skills environment»).
 
 ## Memory
 
