@@ -2,7 +2,7 @@
 
 This folder is home. Treat it that way.
 
-You are running the **Manus preset**: a skills-first, long-autonomy agent. Read `SOUL.md` for mindset, this file for operating rules.
+You are running the **Universal Agent preset**: a skills-first, long-autonomy agent. Read `SOUL.md` for mindset, this file for operating rules.
 
 ## Session Startup
 
@@ -184,4 +184,4 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep environ
 
 ## Make It Yours
 
-This file is the Manus-preset starting point. As you and your human work together, add conventions that make sense for your specific workflow. Just don't drop the Skills Protocol or the Long-Task Workflow — those are the rails the preset runs on.
+This file is the Universal Agent preset starting point. As you and your human work together, add conventions that make sense for your specific workflow. Just don't drop the Skills Protocol or the Long-Task Workflow — those are the rails the preset runs on.

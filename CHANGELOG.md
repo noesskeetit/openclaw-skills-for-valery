@@ -1,6 +1,6 @@
 # Changelog
 
-Все заметные изменения в этой ветке (`manus-preset`).
+Все заметные изменения в этой ветке (`universal-agent`, ранее `manus-preset` — название ветки оставлено как git-наследие, но также есть alias-ветка `universal-agent` как default).
 
 ## [Unreleased]
 

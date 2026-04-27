@@ -73,9 +73,9 @@ license: MIT
 
 ## PR flow
 
-1. Форк → ветка `feat/your-skill` от `manus-preset`
+1. Форк → ветка `feat/your-skill` от `universal-agent` (default branch)
 2. Коммиты — conventional (`feat: ...`, `fix: ...`, `chore: ...`)
-3. PR в `manus-preset`, описание по шаблону:
+3. PR в `universal-agent`, описание по шаблону:
 
    ```
    ## What it does
@@ -115,7 +115,7 @@ license: MIT
    - `workspace/AGENTS.md` (Skills environment block, Missing deps примеры)
    - `workspace/TOOLS.md`
    - `workspace/.env.example`
-3. PR → `manus-preset`, в описании — почему вычеркнули.
+3. PR → `universal-agent`, в описании — почему вычеркнули.
 
 ## Style
 
