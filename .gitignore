@@ -2,6 +2,8 @@ __pycache__/
 .DS_Store
 .env
 .env.*
+!.env.example
+!workspace/.env.example
 .idea/
 .venv/
 .vscode/
