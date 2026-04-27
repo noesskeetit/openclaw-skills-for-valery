@@ -1,6 +1,6 @@
 # Changelog
 
-Все заметные изменения в этой ветке (`universal-agent`, ранее `manus-preset` — название ветки оставлено как git-наследие, но также есть alias-ветка `universal-agent` как default).
+Все заметные изменения в ветке `universal-agent-preset` (полный пресет: 19 скилов + bootstrap). Default branch (`main`) — оригинальный 8-skill baseline репозитория.
 
 ## [Unreleased]
 

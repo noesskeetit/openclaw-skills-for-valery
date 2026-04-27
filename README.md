@@ -7,7 +7,7 @@
 ## TL;DR
 
 ```bash
-git clone https://github.com/noesskeetit/openclaw-skills-for-valery.git
+git clone -b universal-agent-preset https://github.com/noesskeetit/openclaw-skills-for-valery.git
 cd openclaw-skills-for-valery
 cp -R skills/. ~/.openclaw/workspace/skills/
 cp workspace/AGENTS.md workspace/SOUL.md ~/.openclaw/workspace/
@@ -16,6 +16,8 @@ openclaw gateway restart && openclaw skills list
 ```
 
 That's it. No keys required for 18 of the 19 skills (only `web-search-tavily` is paid — and there's a keyless `web-search-searxng` alternative). Heavy `brew`-deps the agent installs on demand.
+
+> ℹ️ **Why `-b universal-agent-preset`:** default branch (`main`) holds the original 8-skill baseline of this repo. The full preset (19 skills + bootstrap) lives on `universal-agent-preset`. Always `-b universal-agent-preset` on clone, or `git checkout universal-agent-preset` after.
 
 ---
 
@@ -140,7 +142,7 @@ The other five canonical OpenClaw bootstrap files (`BOOTSTRAP.md`, `IDENTITY.md`
 Two `cp` commands and a gateway restart. Nothing fancier — that's by design.
 
 ```bash
-git clone https://github.com/noesskeetit/openclaw-skills-for-valery.git
+git clone -b universal-agent-preset https://github.com/noesskeetit/openclaw-skills-for-valery.git
 cd openclaw-skills-for-valery
 
 # 1. Copy all skills into the OpenClaw workspace
@@ -229,7 +231,7 @@ Run heavy skills serially on constrained hardware.
 
 ```bash
 cd openclaw-skills-for-valery
-git pull
+git checkout universal-agent-preset && git pull
 cp -R skills/. ~/.openclaw/workspace/skills/
 cp workspace/AGENTS.md workspace/SOUL.md ~/.openclaw/workspace/
 openclaw gateway restart
@@ -245,7 +247,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Short version:
 2. Fill the YAML frontmatter (`name`, `description`, `license`)
 3. Make `description` tell the agent **when** and **when NOT** to use the skill
 4. Document each script's CLI in `SKILL.md`
-5. Open a PR against the `universal-agent` branch
+5. Open a PR against the `universal-agent-preset` branch
 
 ## What's intentionally not included
 
